@@ -43,7 +43,6 @@ export const useAdminAuth = () => {
     try {
       await api.post("api/admin/auth/login", formData);
       toast.success("Login successful!");
-      return
       setTimeout(()=>{
         navigate("/admin/dashboard");
       },1000)
