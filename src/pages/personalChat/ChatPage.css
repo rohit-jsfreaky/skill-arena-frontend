@@ -1,0 +1,18 @@
+.chat-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .chat-page h2 {
+    margin-bottom: 20px;
+  }
+  
+  .loading, .not-authenticated {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    font-size: 18px;
+    color: #666;
+  }

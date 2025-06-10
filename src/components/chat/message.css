@@ -1,0 +1,21 @@
+/* WebKit Browsers (Chrome, Edge, Safari) */
+.messages-container::-webkit-scrollbar {
+    width: 8px; /* Adjust width */
+  }
+  
+  .messages-container::-webkit-scrollbar-track {
+    background: black; /* Track color */
+    border-radius: 10px;
+  }
+  
+  .messages-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(to right, black, black, #BBF429);
+    border-radius: 10px;
+  }
+  
+  /* Firefox */
+  .messages-container {
+    scrollbar-color: #BBF429 black; /* Thumb color | Track color */
+    scrollbar-width: thin;
+  }
+  
