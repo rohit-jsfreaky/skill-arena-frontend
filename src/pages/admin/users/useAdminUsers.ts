@@ -47,7 +47,12 @@ export const useAdminUsers = () => {
 
   // Debounced search function
   const handleSearch = useCallback(async (term: string) => {
-    if (term.length < 2) {
+    // For numeric searches (user ID), allow single character searches
+    // For text searches, require at least 2 characters
+    const isNumeric = /^\d+$/.test(term.trim());
+    const minLength = isNumeric ? 1 : 2;
+
+    if (term.length < minLength) {
       setSearchResults([]);
       setShowSuggestions(false);
       return;

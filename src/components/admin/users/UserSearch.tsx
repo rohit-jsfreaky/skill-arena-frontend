@@ -21,6 +21,9 @@ const UserSearch: React.FC<UserSearchProps> = ({
   onSearchChange,
   onSelectUser,
 }) => {
+  // Helper function to check if search term is numeric
+  const isNumericSearch = /^\d+$/.test(searchTerm.trim());
+
   return (
     <div className="relative" ref={searchContainerRef}>
       <div className="relative">
@@ -28,8 +31,8 @@ const UserSearch: React.FC<UserSearchProps> = ({
           type="text"
           value={searchTerm}
           onChange={onSearchChange}
-          placeholder="Search users..."
-          className="w-full md:w-64 px-4 py-2 pr-10 rounded-lg bg-black/50 border border-[#BBF429]/40 focus:border-[#BBF429] text-white focus:outline-none transition-all duration-300"
+          placeholder="Search by username, name, or user ID..."
+          className="w-full md:w-80 px-4 py-2 pr-10 rounded-lg bg-black/50 border border-[#BBF429]/40 focus:border-[#BBF429] text-white focus:outline-none transition-all duration-300"
         />
         {searchLoading ? (
           <div className="absolute right-3 top-2.5">
@@ -70,13 +73,34 @@ const UserSearch: React.FC<UserSearchProps> = ({
                 className="px-4 py-3 cursor-pointer hover:bg-[#BBF429]/10 border-b border-[#BBF429]/10 last:border-0"
                 onClick={() => onSelectUser(user.id)}
               >
-                <div className="font-medium text-white">{user.username}</div>
-                <div className="text-sm text-[#BBF429]/70">{user.name}</div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium text-white">{user.username}</div>
+                    <div className="text-sm text-[#BBF429]/70">{user.name}</div>
+                  </div>
+                  <div className="text-xs text-gray-400">ID: {user.id}</div>
+                </div>
+                {/* Highlight if this was an ID search match */}
+                {isNumericSearch &&
+                  user.id.toString() === searchTerm.trim() && (
+                    <div className="text-xs text-[#BBF429] mt-1">
+                      ✓ Exact ID match
+                    </div>
+                  )}
               </motion.div>
             ))}
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Search hint */}
+      {searchTerm.length > 0 && searchTerm.length < 2 && (
+        <div className="absolute z-40 w-full mt-1 px-3 py-2 bg-black/80 border border-[#BBF429]/20 rounded-lg text-xs text-gray-400">
+          {isNumericSearch
+            ? "Enter user ID to search..."
+            : "Type at least 2 characters to search..."}
+        </div>
+      )}
     </div>
   );
 };

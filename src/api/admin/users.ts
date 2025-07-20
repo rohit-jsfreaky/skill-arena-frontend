@@ -114,8 +114,8 @@ export const getUserById = async (
 };
 
 /**
- * Search users by username
- * @param searchTerm The search query
+ * Search users by username, name, or user ID
+ * @param searchTerm The search query (username, name, or user ID)
  * @param setLoading Function to set loading state
  * @returns Promise with search results
  */
@@ -133,11 +133,14 @@ export const searchUsers = async (
 }> => {
   setLoading(true);
   try {
-    const response = await api.get(`/api/admin/users/search?term=${encodeURIComponent(searchTerm)}&limit=5&admin=true`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await api.get(
+      `/api/admin/users/search?term=${encodeURIComponent(searchTerm)}&limit=5&admin=true`, 
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const result = response.data;
 
