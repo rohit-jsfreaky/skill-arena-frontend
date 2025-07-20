@@ -46,15 +46,19 @@ const ShareButtonSmall: React.FC<ShareButtonSmallProps> = ({ tournament }) => {
     }
   };
 
-  const handleFacebookShare = (e) => {
+interface ShareEvent {
+    stopPropagation: () => void;
+}
+
+const handleFacebookShare = (e: ShareEvent): void => {
     e.stopPropagation();
     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-      tournamentUrl
+        tournamentUrl
     )}`;
     window.open(facebookUrl, "_blank", "width=600,height=400");
-  };
+};
 
-  const handleTwitterShare = (e) => {
+  const handleTwitterShare = (e: ShareEvent): void => {
     e.stopPropagation();
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       shareText
@@ -62,7 +66,7 @@ const ShareButtonSmall: React.FC<ShareButtonSmallProps> = ({ tournament }) => {
     window.open(twitterUrl, "_blank", "width=600,height=400");
   };
 
-  const handleLinkedInShare = (e) => {
+  const handleLinkedInShare = (e: ShareEvent): void => {
     e.stopPropagation();
     const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
       tournamentUrl
@@ -70,7 +74,7 @@ const ShareButtonSmall: React.FC<ShareButtonSmallProps> = ({ tournament }) => {
     window.open(linkedinUrl, "_blank", "width=600,height=400");
   };
 
-  const handleWhatsAppShare = (e) => {
+  const handleWhatsAppShare = (e: ShareEvent): void => {
     e.stopPropagation();
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
       `${shareText} ${tournamentUrl}`
@@ -78,7 +82,7 @@ const ShareButtonSmall: React.FC<ShareButtonSmallProps> = ({ tournament }) => {
     window.open(whatsappUrl, "_blank");
   };
 
-  const handleTelegramShare = (e) => {
+  const handleTelegramShare = (e: ShareEvent): void => {
     e.stopPropagation();
     const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(
       tournamentUrl
