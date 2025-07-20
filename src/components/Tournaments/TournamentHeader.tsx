@@ -1,5 +1,6 @@
 import React from 'react';
 import { Tournament } from "@/interface/tournament";
+import ShareButton from './ShareButton';
 
 interface TournamentHeaderProps {
   tournament: Tournament;
@@ -23,8 +24,9 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ tournament }) => {
         </div>
       )}
 
-      {/* Status Badge */}
-      <div className="absolute top-4 right-4 z-20">
+      {/* Status Badge and Share Button */}
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
+        <ShareButton tournament={tournament} />
         {tournament.status && (
           <span
             className={`px-4 py-2 rounded-full text-sm font-medium ${

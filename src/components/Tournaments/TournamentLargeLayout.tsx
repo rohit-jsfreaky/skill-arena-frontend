@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { Tournament } from "@/interface/tournament";
 import Table from "@/containers/Table/Table";
+import ShareButtonSmall from "./ShareButtonSmall";
 
 type TournamentTableProps = {
   formatDate: (dateString: string) => string;
@@ -32,15 +33,18 @@ const TournamentLargeLayout = ({
       key: "tournament",
       label: "Tournament",
       render: (tournament: Tournament) => (
-        <div className="flex items-center">
-          {tournament.image && (
-            <img
-              src={tournament.image}
-              alt={tournament.name}
-              className="h-10 w-10 rounded-full mr-3 object-cover"
-            />
-          )}
-          <span className="font-medium">{tournament.name}</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            {tournament.image && (
+              <img
+                src={tournament.image}
+                alt={tournament.name}
+                className="h-10 w-10 rounded-full mr-3 object-cover"
+              />
+            )}
+            <span className="font-medium">{tournament.name}</span>
+          </div>
+          <ShareButtonSmall tournament={tournament} />
         </div>
       ),
     },

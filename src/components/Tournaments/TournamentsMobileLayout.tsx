@@ -2,6 +2,7 @@ import { Eye, Pencil, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Tournament } from "@/interface/tournament";
 import { useNavigate } from "react-router";
+import ShareButtonSmall from "./ShareButtonSmall";
 
 type TournamentTableProps = {
   formatDate: (dateString: string) => string;
@@ -36,9 +37,12 @@ const TournamentsMobileLayout = ({
               />
             )}
             <div className="min-w-0 flex-1">
-              <h3 className="font-medium text-base sm:text-lg truncate">
-                {tournament.name}
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="font-medium text-base sm:text-lg truncate">
+                  {tournament.name}
+                </h3>
+                <ShareButtonSmall tournament={tournament} />
+              </div>
               <span 
                 className={`inline-block mt-0.5 sm:mt-1 px-2 py-0.5 rounded-full text-xs font-medium ${
                   tournament.status === "upcoming"

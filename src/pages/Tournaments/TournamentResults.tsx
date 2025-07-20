@@ -8,6 +8,7 @@ import { ScreenshotUploader } from "@/components/Tournaments/ScreenshotUploader"
 import { VerificationStatus } from "@/components/Tournaments/VerificationStatus";
 import { UserSubmission } from "@/components/Tournaments/UserSubmission";
 import { AllSubmissions } from "@/components/Tournaments/AllSubmissions";
+import ShareButton from "@/components/Tournaments/ShareButton";
 
 const TournamentResults = () => {
   const { id = "" } = useParams<{ id: string }>();
@@ -55,15 +56,20 @@ const TournamentResults = () => {
           <span className="mr-2">&larr;</span>
           <span>Back to Tournament Details</span>
         </Link>
-        <h1 className="text-2xl sm:text-3xl font-bold mt-2 text-white break-words">
-          {tournament.name} - Results
-        </h1>
-        <p className="text-gray-600 mt-1 text-sm sm:text-base">
-          Tournament ended{" "}
-          {formatDistance(new Date(tournament.end_time), new Date(), {
-            addSuffix: true,
-          })}
-        </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-2">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white break-words">
+              {tournament.name} - Results
+            </h1>
+            <p className="text-gray-600 mt-1 text-sm sm:text-base">
+              Tournament ended{" "}
+              {formatDistance(new Date(tournament.end_time), new Date(), {
+                addSuffix: true,
+              })}
+            </p>
+          </div>
+          <ShareButton tournament={tournament} />
+        </div>
       </div>
 
       {/* Improve grid layout for better responsiveness */}

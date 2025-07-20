@@ -2,6 +2,7 @@ import { UserContextType } from "@/context/UserContext";
 import { Tournament } from "@/interface/tournament";
 import React from "react";
 import { NavigateFunction } from "react-router";
+import ShareButtonSmall from './ShareButtonSmall';
 
 interface TournamentCardProps {
   formatDate: (dateString: string) => string;
@@ -42,9 +43,12 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
           <h2 className="text-sm sm:text-base font-bold text-[#BBF429]">
             {tournament.game_name}
           </h2>
-          <span className="bg-[#BBF429]/20 text-[#BBF429] px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium">
-            {tournament.team_mode}
-          </span>
+          <div className="flex items-center gap-2">
+            <ShareButtonSmall tournament={tournament} />
+            <span className="bg-[#BBF429]/20 text-[#BBF429] px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium">
+              {tournament.team_mode}
+            </span>
+          </div>
         </div>
 
         <div className="flex justify-between items-center mb-1">
