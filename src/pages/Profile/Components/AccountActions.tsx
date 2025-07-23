@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 
-
 const AccountActions = ({
   setAlertOpen,
   setSelectedOption,
@@ -8,8 +7,6 @@ const AccountActions = ({
   setAlertOpen: (open: boolean) => void;
   setSelectedOption: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-
-
   return (
     <>
       <div className="mt-8 mx-4 bg-black/30 backdrop-blur-sm border border-[#BBF429]/20 rounded-xl p-6">
@@ -25,15 +22,7 @@ const AccountActions = ({
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
               className="bg-[#BBF429]/20 hover:bg-[#BBF429]/30 text-[#BBF429] border border-[#BBF429]/40"
-              onClick={() => {
-                /* handle reset */
-              }}
-            >
-              Reset Statistics
-            </Button>
-            <Button
-              className="bg-[#BBF429]/20 hover:bg-[#BBF429]/30 text-[#BBF429] border border-[#BBF429]/40"
-              onClick={()=>setSelectedOption(4)}
+              onClick={() => setSelectedOption(4)}
             >
               View History
             </Button>

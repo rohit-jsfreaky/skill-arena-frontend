@@ -19,6 +19,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router";
 import { useEffect, useState } from "react";
@@ -86,8 +87,14 @@ const items = [
 
 export function AppSidebar() {
   const location = useLocation();
+  const { setOpenMobile } = useSidebar();
   const [disputedCount, setDisputedCount] = useState(0);
   const [tdmDisputedCount, setTdmDisputedCount] = useState(0);
+
+  // Handle link click to close mobile sidebar
+  const handleLinkClick = () => {
+    setOpenMobile(false);
+  };
 
   useEffect(() => {
     // Fetch disputed tournaments and TDM disputes count
@@ -131,6 +138,7 @@ export function AppSidebar() {
                     <SidebarMenuButton asChild>
                       <Link
                         to={item.url}
+                        onClick={handleLinkClick}
                         className={`flex items-center gap-4 text-xl px-4 py-3 rounded-lg transition-all duration-300 ${
                           isActive
                             ? "bg-[#BBF429] text-black font-bold"
