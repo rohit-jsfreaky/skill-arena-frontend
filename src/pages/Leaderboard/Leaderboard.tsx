@@ -38,6 +38,11 @@ interface LeaderboardItem {
   tournaments_joined: number;
   tdm_wins: number;
   tdm_matches_joined: number;
+  kills: number;
+  deaths: number;
+  kd_ratio: number;
+  headshots: number;
+  assists: number;
   score: number;
 }
 
@@ -116,7 +121,7 @@ const LeaderboardPage: React.FC = () => {
       }
 
       const response = await apiClient.get(endpoint);
-
+      console.log("Leaderboard response:", response.data);
       if (response.data.success) {
         setLeaderboard(response.data.data);
         setPagination(response.data.pagination);
@@ -292,8 +297,18 @@ const LeaderboardPage: React.FC = () => {
               <div className="space-y-4">
                 <div className="grid grid-cols-12 gap-2 text-xs text-[#eaffa9]/70 pb-2 border-b border-[#BBF429]/20">
                   <div className="col-span-1">Rank</div>
-                  <div className="col-span-7 sm:col-span-4">Player</div>
+                  <div className="col-span-7 sm:col-span-3">Player</div>
                   {isPro && (
+                    <>
+                      <div className="hidden sm:block col-span-1">Kills</div>
+                      <div className="hidden sm:block col-span-1">Deaths</div>
+                      <div className="hidden sm:block col-span-1">K/D</div>
+                      <div className="hidden sm:block col-span-2">
+                        Tournaments
+                      </div>
+                    </>
+                  )}
+                  {!isPro && (
                     <>
                       <div className="hidden sm:block col-span-2">
                         Tournaments
@@ -321,7 +336,7 @@ const LeaderboardPage: React.FC = () => {
                       {getRankIcon(player.rank)}
                     </div>
 
-                    <div className="col-span-7 sm:col-span-4">
+                    <div className="col-span-7 sm:col-span-3">
                       <div className="flex items-center gap-2">
                         <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
                           {player.profile ? (
@@ -339,7 +354,12 @@ const LeaderboardPage: React.FC = () => {
                           <p className="font-medium text-sm">
                             {player.username || player.name}
                           </p>
-                          {isPro && player.tournament_wins !== null && (
+                          {isPro && player.kills !== null && (
+                            <p className="text-[10px] text-[#eaffa9]/70 sm:hidden">
+                              {player.kills}K/{player.deaths}D · {(player.kd_ratio || 0).toFixed(2)} K/D
+                            </p>
+                          )}
+                          {!isPro && player.tournament_wins !== null && (
                             <p className="text-[10px] text-[#eaffa9]/70 sm:hidden">
                               {player.tournament_wins} tourney wins ·{" "}
                               {player.tdm_wins} TDM wins
@@ -356,6 +376,37 @@ const LeaderboardPage: React.FC = () => {
                     </div>
 
                     {isPro && (
+                      <>
+                        <div className="hidden sm:block col-span-1">
+                          <p className="text-sm font-medium text-green-400">
+                            {player.kills || 0}
+                          </p>
+                        </div>
+
+                        <div className="hidden sm:block col-span-1">
+                          <p className="text-sm font-medium text-red-400">
+                            {player.deaths || 0}
+                          </p>
+                        </div>
+
+                        <div className="hidden sm:block col-span-1">
+                          <p className="text-sm font-medium text-yellow-400">
+                            {(player.kd_ratio || 0).toFixed(2)}
+                          </p>
+                        </div>
+
+                        <div className="hidden sm:block col-span-2">
+                          <p className="text-sm">
+                            {player.tournament_wins || 0} wins
+                          </p>
+                          <p className="text-[10px] text-[#eaffa9]/70">
+                            {player.tournaments_joined || 0} played
+                          </p>
+                        </div>
+                      </>
+                    )}
+
+                    {!isPro && (
                       <>
                         <div className="hidden sm:block col-span-2">
                           <p className="text-sm">

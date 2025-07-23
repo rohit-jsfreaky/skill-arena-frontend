@@ -8,6 +8,7 @@ import {
   CrownIcon,
   AlertTriangle,
   FileText,
+  BarChart3,
 } from "lucide-react";
 import {
   Sidebar,
@@ -75,6 +76,11 @@ const items = [
     title: "Pages",
     url: "/admin/pages",
     icon: FileText,
+  },
+  {
+    title: "Leaderboard",
+    url: "/admin/leaderboard",
+    icon: BarChart3,
   },
 ];
 

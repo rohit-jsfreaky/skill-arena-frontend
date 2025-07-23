@@ -44,6 +44,7 @@ import AdminPagesPage from "@/pages/admin/Pages/AdminPagesPage";
 import AboutUsPage from "@/pages/AboutUs/AboutUsPage";
 import ContactUsPage from "@/pages/ContactUs/ContactUsPage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import AdminLeaderboard from "@/pages/admin/Leaderboard/AdminLeaderboard";
 
 const AppRoutes = () => {
   return (
@@ -363,6 +364,17 @@ const AppRoutes = () => {
         element={
           <AdminLayout>
             <AdminPagesPage />
+          </AdminLayout>
+        }
+      />
+
+      <Route
+        path="/admin/leaderboard"
+        element={
+          <AdminLayout>
+            <AdminProvider>
+              <AdminLeaderboard />
+            </AdminProvider>
           </AdminLayout>
         }
       />
