@@ -49,6 +49,7 @@ export const useEditTournament = (tournament: any) => {
     rules: tournament?.rules || "",
     room_id: tournament?.room_id || null,
     room_password: tournament?.room_password || null,
+    youtube_live_url: tournament?.youtube_live_url || null,
   };
 
   const tournamentForm = useTournamentForm(initialData);

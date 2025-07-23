@@ -3,6 +3,7 @@ import { Tournament } from "@/interface/tournament";
 import React from "react";
 import { NavigateFunction } from "react-router";
 import ShareButtonSmall from './ShareButtonSmall';
+import YoutubeLiveIcon from './YoutubeLiveIcon';
 
 interface TournamentCardProps {
   formatDate: (dateString: string) => string;
@@ -44,6 +45,12 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
             {tournament.game_name}
           </h2>
           <div className="flex items-center gap-2">
+            {tournament.youtube_live_url && (
+              <YoutubeLiveIcon 
+                url={tournament.youtube_live_url} 
+                className="text-xs px-2 py-1"
+              />
+            )}
             <ShareButtonSmall tournament={tournament} />
             <span className="bg-[#BBF429]/20 text-[#BBF429] px-2 sm:px-3 py-1 rounded text-xs sm:text-sm font-medium">
               {tournament.team_mode}

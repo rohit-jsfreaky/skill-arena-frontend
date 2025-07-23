@@ -23,6 +23,7 @@ export interface TournamentFormData {
   room_id?: string | null;
   room_password?: string | null;
   rules: string;
+  youtube_live_url?: string | null;
 }
 
 export interface Tournament {
@@ -43,6 +44,7 @@ export interface Tournament {
   room_id?: string;
   room_password?: string;
   current_participants: number;
+  youtube_live_url?: string | null;
 }
 
 export interface PastTournament {

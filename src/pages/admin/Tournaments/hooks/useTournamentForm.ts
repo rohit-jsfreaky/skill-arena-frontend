@@ -30,6 +30,7 @@ export const useTournamentForm = (initialData?: Partial<TournamentFormState>) =>
     game_name: "",
     prize_pool: 0,
     rules: "",
+    youtube_live_url: "",
     ...initialData
   });
 

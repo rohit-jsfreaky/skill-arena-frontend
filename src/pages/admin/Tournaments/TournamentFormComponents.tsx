@@ -11,6 +11,7 @@ import TournamentTime from "@/components/admin/Tournaments/TournamentTime";
 import TournamentRules from "@/components/admin/Tournaments/TournamentRules";
 import TournamentImage from "@/components/admin/Tournaments/TournamentImage";
 import TournamentRoom from "@/components/admin/Tournaments/TournamentRoom";
+import TournamentYoutubeLiveUrl from "@/components/admin/Tournaments/TournamentYoutubeLiveUrl";
 import { TournamentFormState } from './hooks/useTournamentForm';
 
 interface TournamentFormComponentsProps {
@@ -94,12 +95,18 @@ export const TournamentFormComponents: React.FC<TournamentFormComponentsProps> =
       </FormSection>
 
       <FormSection title="Tournament Media">
-        <TournamentImage
-          image_url={formData.image_url}
-          handleChange={handleChange}
-          handleImageUpload={imageUpload}
-          uploading={uploading}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <TournamentImage
+            image_url={formData.image_url}
+            handleChange={handleChange}
+            handleImageUpload={imageUpload}
+            uploading={uploading}
+          />
+          <TournamentYoutubeLiveUrl
+            youtube_live_url={formData.youtube_live_url || ""}
+            handleChange={handleChange}
+          />
+        </div>
       </FormSection>
 
       <FormSection title="Tournament Rules">

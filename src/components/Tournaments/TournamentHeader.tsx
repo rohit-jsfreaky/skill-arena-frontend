@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tournament } from "@/interface/tournament";
 import ShareButton from './ShareButton';
+import YoutubeLiveIcon from './YoutubeLiveIcon';
 
 interface TournamentHeaderProps {
   tournament: Tournament;
@@ -45,10 +46,22 @@ const TournamentHeader: React.FC<TournamentHeaderProps> = ({ tournament }) => {
 
       {/* Title Section */}
       <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-        <h1 className="text-4xl font-bold text-white mb-2">
-          {tournament.game_name}
-        </h1>
-        <p className="text-[#BBF429] text-xl">{tournament.name}</p>
+        <div className="flex items-end justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-2">
+              {tournament.game_name}
+            </h1>
+            <p className="text-[#BBF429] text-xl">{tournament.name}</p>
+          </div>
+          {tournament.youtube_live_url && (
+            <div className="ml-4">
+              <YoutubeLiveIcon 
+                url={tournament.youtube_live_url} 
+                className="shadow-lg"
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
