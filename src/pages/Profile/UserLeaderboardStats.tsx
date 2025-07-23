@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Trophy, Award, Crown, Users, Gamepad2, Lock } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from 'react-router-dom';
-import apiClient from '@/utils/apiClient';
-import { useMYUser } from '@/context/UserContext';
+import { useNavigate } from "react-router-dom";
+import apiClient from "@/utils/apiClient";
+import { useMYUser } from "@/context/UserContext";
 interface GameStats {
   game_name: string;
   tournament_wins: number;
@@ -27,9 +33,14 @@ interface UserStats {
   tournaments_joined: number;
   tdm_wins: number;
   tdm_matches_joined: number;
+  kills: number | null;
+  deaths: number | null;
+  kd_ratio: number | null;
+  headshots: number | null;
+  assists: number | null;
   score: number;
-  global_rank: number;
-  games: GameStats[];
+  global_rank: number | null;
+  games: GameStats[] | null;
 }
 
 const UserLeaderboardStats: React.FC = () => {
@@ -43,39 +54,53 @@ const UserLeaderboardStats: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const { myUser } = useMYUser();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const fetchStats = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const response = await apiClient.get(`api/leaderboard/user/${userId}`);
+        const response = await apiClient.get(
+          `api/leaderboard/user/${userId}/${myUser?.id}`
+        );
 
         if (response.data.success) {
           setStats(response.data.data);
           setIsPro(response.data.isPro);
           setIsOwnProfile(response.data.isOwnProfile);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error fetching user leaderboard stats:", err);
-        if (err.response?.status === 403 && err.response?.data?.requiresPro) {
+        
+        const error = err as {
+          response?: {
+            status?: number;
+            data?: {
+              requiresPro?: boolean;
+              message?: string;
+            };
+          };
+        };
+
+        if (error.response?.status === 403 && error.response?.data?.requiresPro) {
           setRequiresUpgrade(true);
         } else {
           setError(
-            err.response?.data?.message || "Failed to load user statistics"
+            error.response?.data?.message || "Failed to load user statistics"
           );
         }
       } finally {
         setLoading(false);
       }
     };
-
-    fetchStats();
+    if (userId && myUser?.id) {
+      fetchStats();
+    }
   }, [userId, myUser?.id]);
 
   const navigateToMembership = () => {
-    navigate('/membership');
+    navigate("/membership");
   };
 
   if (loading) {
@@ -110,8 +135,8 @@ const UserLeaderboardStats: React.FC = () => {
             <p className="text-sm sm:text-base">
               Detailed player statistics are only available to Pro members.
             </p>
-            <Button 
-              onClick={navigateToMembership} 
+            <Button
+              onClick={navigateToMembership}
               className="bg-[#BBF429] text-black hover:bg-[#BBF429]/80"
             >
               Upgrade to Pro
@@ -127,14 +152,16 @@ const UserLeaderboardStats: React.FC = () => {
       <Card className="bg-gradient-to-r from-black via-black to-[#BBF429]/10 border-[#BBF429] text-white mx-4 md:mx-10 my-4">
         <CardContent className="p-4 sm:p-6">
           <div className="text-center py-6 sm:py-8">
-            <p className="text-red-400">{error || "Failed to load statistics"}</p>
+            <p className="text-red-400">
+              {error || "Failed to load statistics"}
+            </p>
           </div>
         </CardContent>
       </Card>
     );
   }
 
-  // Calculate win rates
+  // Calculate win rates with proper null checks
   const tournamentWinRate =
     stats.tournaments_joined > 0
       ? Math.round((stats.tournament_wins / stats.tournaments_joined) * 100)
@@ -150,6 +177,17 @@ const UserLeaderboardStats: React.FC = () => {
       ? Math.round((stats.total_wins / stats.total_games_played) * 100)
       : 0;
 
+  // Format numbers safely
+  const formatNumber = (num: number | null | undefined): string => {
+    if (num === null || num === undefined) return "-";
+    return Number(num).toLocaleString();
+  };
+
+  const formatDecimal = (num: number | null | undefined, decimals: number = 2): string => {
+    if (num === null || num === undefined) return "-";
+    return Number(num).toFixed(decimals);
+  };
+
   return (
     <Card className="bg-gradient-to-r from-black via-black to-[#BBF429]/10 border-[#BBF429] text-white mx-4 md:mx-10 my-4">
       <CardHeader className="p-4 sm:p-6">
@@ -159,10 +197,10 @@ const UserLeaderboardStats: React.FC = () => {
             Leaderboard Statistics
           </div>
           {!isPro && !isOwnProfile && (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={navigateToMembership} 
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={navigateToMembership}
               className="border-[#BBF429] text-[#BBF429] hover:bg-[#BBF429]/10"
             >
               <Crown className="h-3 w-3 mr-1" /> Upgrade to Pro
@@ -176,37 +214,83 @@ const UserLeaderboardStats: React.FC = () => {
       <CardContent className="p-3 sm:p-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-6">
           <div className="bg-black/50 rounded-lg p-3 sm:p-4 flex flex-col items-center justify-center border border-[#BBF429]/30">
-            <p className="text-[10px] sm:text-xs text-[#eaffa9]/70 mb-1">Global Rank</p>
+            <p className="text-[10px] sm:text-xs text-[#eaffa9]/70 mb-1">
+              Global Rank
+            </p>
             <div className="text-xl sm:text-2xl font-bold">
-              {stats.global_rank !== null ? `#${stats.global_rank}` : '-'}
+              {stats.global_rank !== null ? `#${stats.global_rank}` : "-"}
             </div>
           </div>
 
           <div className="bg-black/50 rounded-lg p-3 sm:p-4 flex flex-col items-center justify-center border border-[#BBF429]/30">
-            <p className="text-[10px] sm:text-xs text-[#eaffa9]/70 mb-1">Total Score</p>
-            <div className="text-xl sm:text-2xl font-bold">{stats.score.toLocaleString()}</div>
+            <p className="text-[10px] sm:text-xs text-[#eaffa9]/70 mb-1">
+              Total Score
+            </p>
+            <div className="text-xl sm:text-2xl font-bold">
+              {formatNumber(stats.score)}
+            </div>
           </div>
 
           <div className="bg-black/50 rounded-lg p-3 sm:p-4 flex flex-col items-center justify-center border border-[#BBF429]/30">
-            <p className="text-[10px] sm:text-xs text-[#eaffa9]/70 mb-1">Tournament Wins</p>
-            <div className="text-xl sm:text-2xl font-bold">{stats.tournament_wins}</div>
+            <p className="text-[10px] sm:text-xs text-[#eaffa9]/70 mb-1">
+              Tournament Wins
+            </p>
+            <div className="text-xl sm:text-2xl font-bold">
+              {stats.tournament_wins}
+            </div>
           </div>
 
           <div className="bg-black/50 rounded-lg p-3 sm:p-4 flex flex-col items-center justify-center border border-[#BBF429]/30">
-            <p className="text-[10px] sm:text-xs text-[#eaffa9]/70 mb-1">TDM Wins</p>
-            <div className="text-xl sm:text-2xl font-bold">{stats.tdm_wins}</div>
+            <p className="text-[10px] sm:text-xs text-[#eaffa9]/70 mb-1">
+              TDM Wins
+            </p>
+            <div className="text-xl sm:text-2xl font-bold">
+              {stats.tdm_wins}
+            </div>
           </div>
         </div>
 
+        {/* Kill/Death Statistics - Show if Pro or Own Profile and data exists */}
+        {(isPro || isOwnProfile) && (stats.kills !== null || stats.deaths !== null) && (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6">
+            <div className="bg-black/50 rounded-lg p-3 sm:p-4 flex flex-col items-center justify-center border border-green-500/30">
+              <p className="text-[10px] sm:text-xs text-green-400 mb-1">
+                Total Kills
+              </p>
+              <div className="text-xl sm:text-2xl font-bold text-green-400">
+                {formatNumber(stats.kills)}
+              </div>
+            </div>
+
+            <div className="bg-black/50 rounded-lg p-3 sm:p-4 flex flex-col items-center justify-center border border-red-500/30">
+              <p className="text-[10px] sm:text-xs text-red-400 mb-1">
+                Total Deaths
+              </p>
+              <div className="text-xl sm:text-2xl font-bold text-red-400">
+                {formatNumber(stats.deaths)}
+              </div>
+            </div>
+
+            <div className="bg-black/50 rounded-lg p-3 sm:p-4 flex flex-col items-center justify-center border border-yellow-500/30">
+              <p className="text-[10px] sm:text-xs text-yellow-400 mb-1">
+                K/D Ratio
+              </p>
+              <div className="text-xl sm:text-2xl font-bold text-yellow-400">
+                {formatDecimal(stats.kd_ratio)}
+              </div>
+            </div>
+          </div>
+        )}
+
         <Tabs defaultValue="overview">
           <TabsList className="grid grid-cols-2 mb-4 bg-black border border-[#BBF429]/50">
-            <TabsTrigger 
-              value="overview" 
+            <TabsTrigger
+              value="overview"
               className="data-[state=active]:bg-[#BBF429]  text-white data-[state=active]:text-black text-xs sm:text-sm"
-            > 
+            >
               Overview
             </TabsTrigger>
-            <TabsTrigger 
+            <TabsTrigger
               value="games"
               className="data-[state=active]:bg-[#BBF429] text-white data-[state=active]:text-black text-xs sm:text-sm"
             >
@@ -222,11 +306,13 @@ const UserLeaderboardStats: React.FC = () => {
                     <Trophy className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500" />
                     Tournament Win Rate
                   </p>
-                  <span className="text-xs sm:text-sm">{tournamentWinRate}%</span>
+                  <span className="text-xs sm:text-sm">
+                    {tournamentWinRate}%
+                  </span>
                 </div>
-                <Progress 
-                  value={tournamentWinRate} 
-                  className="h-1.5 sm:h-2 [&>div]:bg-[#BBF429]" 
+                <Progress
+                  value={tournamentWinRate}
+                  className="h-1.5 sm:h-2 [&>div]:bg-[#BBF429]"
                 />
                 <p className="text-[10px] sm:text-xs text-[#eaffa9]/70">
                   {stats.tournament_wins} wins out of {stats.tournaments_joined}{" "}
@@ -242,12 +328,13 @@ const UserLeaderboardStats: React.FC = () => {
                   </p>
                   <span className="text-xs sm:text-sm">{tdmWinRate}%</span>
                 </div>
-                <Progress 
-                  value={tdmWinRate} 
-                  className="h-1.5 sm:h-2 [&>div]:bg-[#BBF429]" 
+                <Progress
+                  value={tdmWinRate}
+                  className="h-1.5 sm:h-2 [&>div]:bg-[#BBF429]"
                 />
                 <p className="text-[10px] sm:text-xs text-[#eaffa9]/70">
-                  {stats.tdm_wins} wins out of {stats.tdm_matches_joined} TDM matches
+                  {stats.tdm_wins} wins out of {stats.tdm_matches_joined} TDM
+                  matches
                 </p>
               </div>
 
@@ -259,44 +346,62 @@ const UserLeaderboardStats: React.FC = () => {
                   </p>
                   <span className="text-xs sm:text-sm">{overallWinRate}%</span>
                 </div>
-                <Progress 
-                  value={overallWinRate} 
-                  className="h-1.5 sm:h-2 [&>div]:bg-[#BBF429]" 
+                <Progress
+                  value={overallWinRate}
+                  className="h-1.5 sm:h-2 [&>div]:bg-[#BBF429]"
                 />
                 <p className="text-[10px] sm:text-xs text-[#eaffa9]/70">
-                  {stats.total_wins} wins out of {stats.total_games_played} games
+                  {stats.total_wins} wins out of {stats.total_games_played}{" "}
+                  games
                 </p>
               </div>
             </div>
           </TabsContent>
 
           <TabsContent value="games" className="space-y-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {stats.games && stats.games.map((game, index) => (
-                <div key={index} className="space-y-2 bg-black/30 p-3 rounded-lg border border-[#BBF429]/30">
-                  <div className="flex justify-between items-center">
-                    <p className="text-xs sm:text-sm font-medium flex items-center gap-1">
-                      <Gamepad2 className="h-3 w-3 sm:h-4 sm:w-4 text-[#BBF429]" />
-                      {game.game_name}
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 mt-2">
-                    <div>
-                      <p className="text-[10px] sm:text-xs text-[#eaffa9]/70">Tournaments</p>
-                      <p className="text-xs sm:text-sm">
-                        {game.tournament_wins} / {game.tournaments_joined} wins
+            {stats.games && stats.games.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {stats.games.map((game, index) => (
+                  <div
+                    key={index}
+                    className="space-y-2 bg-black/30 p-3 rounded-lg border border-[#BBF429]/30"
+                  >
+                    <div className="flex justify-between items-center">
+                      <p className="text-xs sm:text-sm font-medium flex items-center gap-1">
+                        <Gamepad2 className="h-3 w-3 sm:h-4 sm:w-4 text-[#BBF429]" />
+                        {game.game_name}
                       </p>
                     </div>
-                    <div>
-                      <p className="text-[10px] sm:text-xs text-[#eaffa9]/70">TDM Matches</p>
-                      <p className="text-xs sm:text-sm">
-                        {game.tdm_wins} / {game.tdm_matches_joined} wins
-                      </p>
+                    <div className="grid grid-cols-2 gap-2 mt-2">
+                      <div>
+                        <p className="text-[10px] sm:text-xs text-[#eaffa9]/70">
+                          Tournaments
+                        </p>
+                        <p className="text-xs sm:text-sm">
+                          {game.tournament_wins} / {game.tournaments_joined}{" "}
+                          wins
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] sm:text-xs text-[#eaffa9]/70">
+                          TDM Matches
+                        </p>
+                        <p className="text-xs sm:text-sm">
+                          {game.tdm_wins} / {game.tdm_matches_joined} wins
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-[#eaffa9]/70">No game-specific statistics available</p>
+                <p className="text-xs text-[#eaffa9]/50 mt-1">
+                  Game statistics will appear after participating in tournaments or TDM matches
+                </p>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </CardContent>
