@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Trophy,
@@ -25,6 +25,7 @@ import { useMYUser } from "@/context/UserContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import ClientUserSearch from "@/components/UserSearch/ClientUserSearch";
+import PlatformStatsBanner from "@/components/PlatformStatsBanner";
 
 interface LeaderboardItem {
   id: number;
@@ -66,11 +67,6 @@ interface LeaderboardResponse {
   score: number | string;
 }
 
-interface Game {
-  id: number;
-  name: string;
-}
-
 interface PaginationInfo {
   totalUsers: number;
   totalPages: number;
@@ -95,41 +91,13 @@ const LeaderboardPage: React.FC = () => {
     hasNextPage: false,
     hasPrevPage: false,
   });
-  const [games, setGames] = useState<Game[]>([]);
   const [selectedGame, setSelectedGame] = useState<string>("");
   const [isPro, setIsPro] = useState<boolean>(false);
 
   const { myUser } = useMYUser();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const response = await apiClient.get("api/games");
-        if (response.data.success) {
-          setGames(response.data.data);
-        }
-      } catch (err) {
-        console.error("Error fetching games:", err);
-      }
-    };
-
-    const timer = setTimeout(() => {
-      fetchGames();
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchLeaderboard(1);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [activeTab, timeframe, selectedGame, myUser?.id]);
-
-  const fetchLeaderboard = async (page: number) => {
+  const fetchLeaderboard = useCallback(async (page: number) => {
     setLoading(true);
     setError(null);
 
@@ -189,7 +157,15 @@ const LeaderboardPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab, timeframe, selectedGame, myUser?.id]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchLeaderboard(1);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [fetchLeaderboard]);
 
   const handlePageChange = (page: number) => {
     fetchLeaderboard(page);
@@ -235,6 +211,9 @@ const LeaderboardPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Platform Statistics Banner */}
+        <PlatformStatsBanner />
 
         <Card className="mb-4 sm:mb-6 bg-gradient-to-r from-black via-black to-[#BBF429]/10 border border-[#BBF429]">
           <CardContent className="p-3 sm:p-6">

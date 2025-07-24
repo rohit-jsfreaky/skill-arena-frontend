@@ -465,7 +465,7 @@ const AdminLeaderboard: React.FC = () => {
         <PlatformStatsManagement />
 
         {/* Users Table */}
-        <Card className="bg-gray-900 border-gray-800">
+        <Card className="bg-gray-900 border-gray-800 mt-5">
           <CardHeader>
             <CardTitle className="text-[#BBF429]">
               User Statistics ({pagination.totalUsers} users)
