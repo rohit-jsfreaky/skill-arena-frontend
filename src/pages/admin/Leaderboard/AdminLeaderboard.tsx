@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useAdmin } from "@/context/AdminContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -37,6 +36,7 @@ import {
 } from "lucide-react";
 import api from "@/utils/api";
 import { toast } from "sonner";
+import PlatformStatsManagement from "@/components/admin/PlatformStatsManagement";
 
 interface UserLeaderboardStats {
   id: number;
@@ -139,13 +139,7 @@ const AdminLeaderboard: React.FC = () => {
     averageKD: 0,
   });
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchUsers(1);
-    }
-  }, [isAuthenticated, search, sortBy, sortOrder]);
-
-  const fetchUsers = async (page: number) => {
+  const fetchUsers = useCallback(async (page: number) => {
     setLoading(true);
     setError(null);
 
@@ -166,7 +160,7 @@ const AdminLeaderboard: React.FC = () => {
 
         // Calculate total statistics
         const stats = response.data.data.reduce(
-          (acc: any, user: UserLeaderboardStats) => ({
+          (acc: { totalKills: number; totalDeaths: number }, user: UserLeaderboardStats) => ({
             totalKills: acc.totalKills + (user.total_kills || 0),
             totalDeaths: acc.totalDeaths + (user.total_deaths || 0),
           }),
@@ -183,13 +177,22 @@ const AdminLeaderboard: React.FC = () => {
       } else {
         setError("Failed to fetch users");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error fetching users:", err);
-      setError(err.response?.data?.message || "Failed to fetch users");
+      const errorMessage = err instanceof Error && 'response' in err 
+        ? (err as { response?: { data?: { message?: string } } })?.response?.data?.message 
+        : "Failed to fetch users";
+      setError(errorMessage || "Failed to fetch users");
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.limit, search, sortBy, sortOrder]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchUsers(1);
+    }
+  }, [isAuthenticated, search, sortBy, sortOrder, fetchUsers]);
 
   const handleEditUser = (user: UserLeaderboardStats) => {
     setEditingUser(user);
@@ -252,11 +255,12 @@ const AdminLeaderboard: React.FC = () => {
       } else {
         toast.error("Failed to update user statistics");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error updating user stats:", err);
-      toast.error(
-        err.response?.data?.message || "Failed to update user statistics"
-      );
+      const errorMessage = err instanceof Error && 'response' in err 
+        ? (err as { response?: { data?: { message?: string } } })?.response?.data?.message 
+        : "Failed to update user statistics";
+      toast.error(errorMessage || "Failed to update user statistics");
     } finally {
       setUpdating(false);
     }
@@ -275,11 +279,12 @@ const AdminLeaderboard: React.FC = () => {
       } else {
         toast.error("Failed to reset user statistics");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error resetting user stats:", err);
-      toast.error(
-        err.response?.data?.message || "Failed to reset user statistics"
-      );
+      const errorMessage = err instanceof Error && 'response' in err 
+        ? (err as { response?: { data?: { message?: string } } })?.response?.data?.message 
+        : "Failed to reset user statistics";
+      toast.error(errorMessage || "Failed to reset user statistics");
     } finally {
       setResetting(null);
       setResetDialogOpen(false);
@@ -455,6 +460,9 @@ const AdminLeaderboard: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Platform Statistics Management */}
+        <PlatformStatsManagement />
 
         {/* Users Table */}
         <Card className="bg-gray-900 border-gray-800">
