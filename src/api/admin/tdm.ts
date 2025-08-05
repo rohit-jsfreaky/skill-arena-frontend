@@ -1,5 +1,22 @@
 import api from "@/utils/api";
 
+// Admin: Create a new TDM match
+export const createTdmMatch = async (data: {
+  match_type: 'public' | 'private';
+  game_name: string;
+  entry_fee: number;
+  team_size: number;
+}) => {
+  const response = await api.post(`api/admin/tdm/matches/create?admin=true`, data);
+  return response.data;
+};
+
+// Admin: Generate shareable link for private matches
+export const generatePrivateMatchLink = async (matchId: number) => {
+  const response = await api.get(`api/admin/tdm/matches/${matchId}/share-link?admin=true`);
+  return response.data;
+};
+
 // Get all TDM matches with pagination and filtering
 export const getAllTdmMatches = async (page = 1, limit = 10, status = "all") => {
   const response = await api.get(`api/admin/tdm/matches?page=${page}&limit=${limit}&status=${status}&admin=true`);
@@ -31,7 +48,11 @@ export const resolveTdmDispute = async (
   adminNotes: string,
   winnerTeamId?: number
 ) => {
-  const data: any = { resolution, admin_notes: adminNotes };
+  const data: { 
+    resolution: string; 
+    admin_notes: string; 
+    winner_team_id?: number; 
+  } = { resolution, admin_notes: adminNotes };
   
   // Winner team ID is only required when resolving in favor of a team
   if (resolution === 'resolved' && winnerTeamId) {

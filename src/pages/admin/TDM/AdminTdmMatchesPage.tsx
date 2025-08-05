@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,15 +10,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Eye } from "lucide-react";
+import { Eye, Share2 } from "lucide-react";
 import { LoadingSpinner } from "@/components/my-ui/Loader";
+import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { adminGetAllTdmMatches } from "@/api/tdmMatches";
+import { generatePrivateMatchLink } from "@/api/admin/tdm";
 import { TdmMatch } from "@/interface/tdmMatches";
 import { Pagination } from "@/components/ui/pagination";
 import Table, { TableColumn } from "@/containers/Table/Table";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { format } from "date-fns";
 
 const AdminTdmMatchesPage = () => {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const AdminTdmMatchesPage = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   // Load matches with filtering and pagination
-  const loadMatches = async () => {
+  const loadMatches = useCallback(async () => {
     try {
       setLoading(true);
       const response = await adminGetAllTdmMatches(
@@ -56,12 +57,12 @@ const AdminTdmMatchesPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.currentPage, pagination.limit, statusFilter]);
 
   // Load matches when component mounts or filters change
   useEffect(() => {
     loadMatches();
-  }, [pagination.currentPage, statusFilter]);
+  }, [loadMatches]);
 
   // Get status badge color
   const getStatusBadgeColor = (status: string) => {
@@ -83,13 +84,32 @@ const AdminTdmMatchesPage = () => {
     }
   };
 
-  const handleChangePage = (page: number) => {
-    setPagination((prev) => ({ ...prev, currentPage: page }));
+  // Handle sharing private match link
+  const handleShareMatch = async (match: TdmMatch) => {
+    if (match.match_type !== "private") {
+      toast.error("Only private matches can be shared");
+      return;
+    }
+
+    try {
+      const response = await generatePrivateMatchLink(match.id);
+      if (response.success) {
+        const shareableLink = response.data.shareable_link;
+        
+        // Copy to clipboard
+        await navigator.clipboard.writeText(shareableLink);
+        toast.success("Private match link copied to clipboard!");
+      } else {
+        toast.error(response.message || "Failed to generate share link");
+      }
+    } catch (error) {
+      console.error("Error generating share link:", error);
+      toast.error("Failed to generate share link");
+    }
   };
 
-  // Format date for better readability
-  const formatDate = (dateString: string) => {
-    return format(new Date(dateString), "MMM d, yyyy h:mm a");
+  const handleChangePage = (page: number) => {
+    setPagination((prev) => ({ ...prev, currentPage: page }));
   };
 
   // Define table columns
@@ -166,16 +186,32 @@ const AdminTdmMatchesPage = () => {
       key: "actions",
       label: "Actions",
       render: (match) => (
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/admin/tdm/matches/${match.id}/review`);
-          }}
-        >
-          <Eye className="h-4 w-4" />
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/admin/tdm/matches/${match.id}/review`);
+            }}
+            title="View Match Details"
+          >
+            <Eye className="h-4 w-4" />
+          </Button>
+          {match.match_type === "private" && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleShareMatch(match);
+              }}
+              title="Share Private Match Link"
+            >
+              <Share2 className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
       ),
     },
   ];

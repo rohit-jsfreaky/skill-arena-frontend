@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Coins, Trophy, Users, PlusCircle } from "lucide-react";
+import { Coins, Trophy, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useMYUser } from "@/context/UserContext";
 import { PublicMatchesList } from "@/components/TDM/PublicMatchesList";
@@ -29,7 +29,7 @@ const TDMPage = () => {
 
   React.useEffect(() => {
     if (myUser) {
-      loadPublicMatches();
+      loadPublicMatches(myUser.id); // Pass user ID for excluding joined matches
       loadMyMatches(myUser.id);
     }
   }, [myUser, loadPublicMatches, loadMyMatches]);
@@ -50,10 +50,11 @@ const TDMPage = () => {
             Team Deathmatch
           </h1>
           <p className="text-[#EAFFA9] mt-1">
-            Compete in team battles and win rewards
+            Join team battles and compete for rewards
           </p>
         </div>
-        <div className="flex gap-3">
+        {/* REMOVED: Create Match button - Users can no longer create matches */}
+        {/* <div className="flex gap-3">
           <Button
             onClick={() => navigate("/tdm/create-match")}
             className="flex items-center gap-2 text-[#BBF429]"
@@ -61,7 +62,7 @@ const TDMPage = () => {
             <PlusCircle className="h-4 w-4" />
             Create Match
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

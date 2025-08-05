@@ -28,6 +28,7 @@ import { formatDistanceToNow } from "date-fns";
 import { showErrorToast } from "@/utils/toastUtils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// REMOVED: import { joinPrivateMatchByLink } from "@/api/tdmMatches"; - no longer needed
 
 const JoinMatchForm = () => {
   const { matchId } = useParams<{ matchId: string }>();
@@ -81,34 +82,8 @@ const JoinMatchForm = () => {
     }
   }, [myUser]);
 
-  // Add this function to handle joining Team A directly
-  const handleJoinTeamA = async () => {
-    if (!myUser) {
-      showErrorToast("You must be logged in to join a match");
-      return;
-    }
-
-    if (!match || !match.team_a?.id) {
-      showErrorToast("Match details not available");
-      return;
-    }
-
-    try {
-      setIsJoining(true);
-      const result = await joinTeam(match.id, match.team_a.id);
-
-      if (result) {
-        navigate(`/tdm/match/${match.id}`);
-      }
-    } catch (error) {
-      console.error("Error joining team:", error);
-    } finally {
-      setIsJoining(false);
-    }
-  };
-
-  // Modify the handleJoinMatch function to work with less than 4 players
-  const handleJoinMatch = async () => {
+  // Modify the handleJoinMatch function to work with team selection
+  const handleJoinMatch = async (preferredTeam: 'team_a' | 'team_b' = 'team_b') => {
     if (!myUser) {
       showErrorToast("You must be logged in to join a match");
       return;
@@ -116,6 +91,11 @@ const JoinMatchForm = () => {
 
     if (!match) {
       showErrorToast("Match details not available");
+      return;
+    }
+
+    if (!matchId) {
+      showErrorToast("Invalid match ID");
       return;
     }
 
@@ -132,11 +112,14 @@ const JoinMatchForm = () => {
 
     try {
       setIsJoining(true);
+      
+      // Use joinPublicMatch for both public and private matches with team preference
       const result = await joinPublicMatch({
-        match_id: match.id,
+        match_id: parseInt(matchId),
         team_name: teamName,
         team_members: selectedMembers.map((m) => m.id),
         captainId: myUser.id,
+        preferred_team: preferredTeam,
       });
 
       if (result) {
@@ -144,6 +127,7 @@ const JoinMatchForm = () => {
       }
     } catch (error) {
       console.error("Error joining match:", error);
+      showErrorToast("Failed to join match");
     } finally {
       setIsJoining(false);
     }
@@ -397,13 +381,14 @@ const JoinMatchForm = () => {
                   <Button
                     type="button"
                     className="w-full bg-[#BBF429] text-black hover:bg-[#EAFFA9]"
-                    onClick={handleJoinTeamA}
+                    onClick={() => joinTeam(match.id, match.team_a?.id || 0)}
                     disabled={
                       loading || 
                       isJoining || 
                       isInMatch || 
                       !match?.team_a?.id ||
-                      (match?.team_a?.members?.length || 0) >= 4
+                      (match?.team_a?.members?.length || 0) >= 4 ||
+                      !!match?.team_a?.team_name // If team A already has a name, it's taken
                     }
                   >
                     {isJoining ? (
@@ -465,7 +450,7 @@ const JoinMatchForm = () => {
                     <Button
                       type="button"
                       className="w-full bg-[#BBF429] text-black hover:bg-[#EAFFA9]"
-                      onClick={handleJoinMatch}
+                      onClick={() => handleJoinMatch('team_b')}
                       disabled={
                         loading ||
                         isJoining ||

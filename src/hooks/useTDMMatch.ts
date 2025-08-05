@@ -1,9 +1,8 @@
 import { useState, useCallback } from "react";
 import { useMYUser } from "@/context/UserContext";
 import { showErrorToast, showSuccessToast } from "@/utils/toastUtils";
-import { JoinTdmMatchRequest, TdmMatchType } from "@/interface/tdmMatches";
+import { JoinTdmMatchRequest } from "@/interface/tdmMatches"; // REMOVED: TdmMatchType - no longer needed
 import {
-  createTdmMatch,
   getPublicTdmMatches,
   getTdmMatchById,
   getUserTdmMatches,
@@ -19,6 +18,7 @@ import {
   checkTdmMatchReadiness,
   setTdmRoomDetails,
 } from "@/api/tdmMatches";
+// REMOVED: import { createTdmMatch } from "@/api/admin/tdm"; - Users can no longer create matches
 
 export interface TeamMember {
   id: number;
@@ -48,72 +48,14 @@ export const useTDMMatch = () => {
     setState((prev) => ({ ...prev, loading }));
   }, []);
 
-  // Create a new TDM match
-  const handleCreateMatch = useCallback(
-    async (
-      matchType: TdmMatchType,
-      gameName: string,
-      entryFee: number,
-      teamName: string,
-      teamMembers: TeamMember[],
-      teamSize: number  // Add teamSize parameter
-    ) => {
-      try {
-        if (!myUser) {
-          showErrorToast("You need to be logged in");
-          return;
-        }
-
-        if (teamMembers.length < 1 || teamMembers.length > teamSize) {
-          showErrorToast(`Team must have between 1 and ${teamSize} members`);
-          return;
-        }
-
-        if (!teamName) {
-          showErrorToast("Please enter a team name");
-          return;
-        }
-
-        setLoading(true);
-
-        const data = {
-          match_type: matchType,
-          game_name: gameName,
-          entry_fee: entryFee,
-          team_name: teamName,
-          team_members: teamMembers.map((member) => member.id),
-          creatorId: myUser.id,
-          team_size: teamSize  // Add teamSize to request
-        };
-
-        const response = await createTdmMatch(data);
-
-        if (response.data.success) {
-          showSuccessToast("Match created successfully");
-          setState((prev) => ({
-            ...prev,
-            currentMatchId: response.data.data.match_id,
-            matchDetails: response.data.data,
-          }));
-          return response.data.data;
-        } else {
-          showErrorToast(response.data.message || "Failed to create match");
-        }
-      } catch (error: any) {
-        showErrorToast(error.message || "Failed to create match");
-      } finally {
-        setLoading(false);
-      }
-      return null;
-    },
-    [myUser, setLoading]
-  );
+  // REMOVED: Create a new TDM match - Users can no longer create matches
+  // Match creation is now admin-only functionality
 
   // Load public matches
-  const loadPublicMatches = useCallback(async () => {
+  const loadPublicMatches = useCallback(async (userId: number) => {
     try {
       setLoading(true);
-      const response = await getPublicTdmMatches();
+      const response = await getPublicTdmMatches(userId);
       if (response.data.success) {
         setState((prev) => ({ ...prev, publicMatches: response.data.data }));
       } else {
@@ -540,7 +482,7 @@ export const useTDMMatch = () => {
   return {
     ...state,
     setLoading,
-    handleCreateMatch,
+    // REMOVED: handleCreateMatch - Users can no longer create matches
     loadPublicMatches,
     loadMyMatches,
     loadMatchDetails,

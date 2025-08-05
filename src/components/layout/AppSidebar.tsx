@@ -48,6 +48,11 @@ const items = [
     icon: Users, // or a more appropriate icon
   },
   {
+    title: "Create TDM Match",
+    url: "/admin/tdm/create",
+    icon: Users, // or a more appropriate icon for creation
+  },
+  {
     title: "TDM Disputes",
     url: "/admin/tdm/disputes",
     icon: AlertTriangle,

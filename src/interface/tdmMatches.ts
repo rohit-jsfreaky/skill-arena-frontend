@@ -77,6 +77,7 @@ export interface JoinTdmMatchRequest {
   team_members: number[]; // Now can be 1-4 members
   captainId: number;
   team_size?: number;  // Add optional team size for joining (server might already know it)
+  preferred_team?: 'team_a' | 'team_b'; // Add preferred team selection
 }
 
 // TDM Screenshot

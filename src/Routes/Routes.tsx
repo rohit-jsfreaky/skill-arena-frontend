@@ -32,9 +32,11 @@ import AdminTournamentResults from "@/pages/admin/Tournaments/AdminTournamentRes
 import AdminTournamentReview from "@/pages/admin/Tournaments/AdminTournamentReview";
 import AdminTdmMatchesPage from "@/pages/admin/TDM/AdminTdmMatchesPage";
 import AdminTdmDisputesPage from "@/pages/admin/TDM/AdminTdmDisputesPage";
+import AdminCreateTdmMatchPage from "@/pages/admin/TDM/AdminCreateTdmMatchPage";
 import LeaderboardPage from "@/pages/Leaderboard/Leaderboard";
-import CreateTdmMatchPage from "@/pages/TDM/CreateTdmMatchPage";
+// REMOVED: import CreateTdmMatchPage from "@/pages/TDM/CreateTdmMatchPage"; - Users can no longer create matches
 import MatchDetailsPage from "@/pages/TDM/MatchDetailsPage";
+import JoinPrivateMatchPage from "@/pages/TDM/JoinPrivateMatchPage";
 import PublicMatchesPage from "@/pages/PublicMatchesPage";
 import JoinMatchForm from "@/components/TDM/JoinMatchForm";
 import UserLeaderboardStats from "@/pages/Profile/UserLeaderboardStats";
@@ -119,12 +121,13 @@ const AppRoutes = () => {
           </Layout>
         }
       />
+      {/* BLOCKED: User TDM creation route - redirect to TDM page */}
       <Route
         path="/tdm/create-match"
         element={
           <Layout>
             <ProtectedRoute>
-              <CreateTdmMatchPage />
+              <TDMPage />
             </ProtectedRoute>
           </Layout>
         }
@@ -145,6 +148,17 @@ const AppRoutes = () => {
           <Layout>
             <ProtectedRoute>
               <JoinMatchForm />
+            </ProtectedRoute>
+          </Layout>
+        }
+      />
+
+      <Route
+        path="/tdm/join-private/:inviteCode"
+        element={
+          <Layout>
+            <ProtectedRoute>
+              <JoinPrivateMatchPage />
             </ProtectedRoute>
           </Layout>
         }
@@ -292,6 +306,15 @@ const AppRoutes = () => {
         element={
           <AdminLayout>
             <AdminTdmMatchesPage />
+          </AdminLayout>
+        }
+      />
+
+      <Route
+        path="/admin/tdm/create"
+        element={
+          <AdminLayout>
+            <AdminCreateTdmMatchPage />
           </AdminLayout>
         }
       />

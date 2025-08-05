@@ -2,27 +2,40 @@ import apiClient from "@/utils/apiClient";
 import {
   TdmMatch,
   TdmMatchDetails,
-  CreateTdmMatchRequest,
   JoinTdmMatchRequest,
 } from "@/interface/tdmMatches";
 
-// CREATE
-export const createTdmMatch = async (matchData: CreateTdmMatchRequest) => {
+// REMOVED: Users can no longer create TDM matches - moved to admin side
+// export const createTdmMatch = async (matchData: CreateTdmMatchRequest) => {
+//   const response = await apiClient.post<{
+//     success: boolean;
+//     message: string;
+//     data: any;
+//   }>("/api/tdm/create", matchData);
+//   return response;
+// };
+
+// Join private match using shareable link
+export const joinPrivateMatchByLink = async (matchId: number, data: {
+  team_name?: string;
+  team_members?: number[];
+  captainId?: number;
+}) => {
   const response = await apiClient.post<{
     success: boolean;
     message: string;
     data: any;
-  }>("/api/tdm/create", matchData);
+  }>(`/api/tdm/join-match/${matchId}`, data);
 
   return response;
 };
 
 // READ
-export const getPublicTdmMatches = async () => {
+export const getPublicTdmMatches = async (userId: number) => {
   const response = await apiClient.get<{
     success: boolean;
     data: TdmMatch[];
-  }>("/api/tdm/public");
+  }>(`/api/tdm/public?user_id=${userId}`);
 
   return response;
 };

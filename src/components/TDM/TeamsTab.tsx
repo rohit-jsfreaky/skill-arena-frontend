@@ -73,7 +73,8 @@ const TeamsTab: React.FC<TeamsTabProps> = ({ matchDetails }) => {
             
             {/* Add Join Team A Button if possible */}
             {!isUserInMatch && matchDetails.status === 'waiting' && 
-             (matchDetails.team_a?.members?.length || 0) < teamSize && (
+             (matchDetails.team_a?.members?.length || 0) < teamSize && 
+             matchDetails.team_a?.id && (
               <Button 
                 size="sm"
                 variant="outline"
