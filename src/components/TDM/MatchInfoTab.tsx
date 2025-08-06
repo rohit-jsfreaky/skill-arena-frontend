@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Clock, Clipboard, AlertCircle, Trophy, Users } from "lucide-react";
-import { format } from "date-fns";
+import { formatToIST } from "@/utils/timeUtils";
 import { showSuccessToast } from "@/utils/toastUtils";
 import { useTDMMatch } from "@/hooks/useTDMMatch";
 import { Progress } from "@/components/ui/progress";
@@ -374,7 +374,7 @@ const MatchInfoTab: React.FC<MatchInfoTabProps> = ({
                     {matchDetails.end_time && (
                       <p className="text-sm text-muted-foreground">
                         Completed on{" "}
-                        {format(new Date(matchDetails.end_time), "PPP")}
+                        {formatToIST(new Date(matchDetails.end_time), "PPP")}
                       </p>
                     )}
                   </div>

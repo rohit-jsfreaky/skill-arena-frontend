@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Eye, Share2 } from "lucide-react";
 import { LoadingSpinner } from "@/components/my-ui/Loader";
 import { toast } from "sonner";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNowIST } from "@/utils/timeUtils";
 import { adminGetAllTdmMatches } from "@/api/tdmMatches";
 import { generatePrivateMatchLink } from "@/api/admin/tdm";
 import { TdmMatch } from "@/interface/tdmMatches";
@@ -180,7 +180,7 @@ const AdminTdmMatchesPage = () => {
       key: "created_at",
       label: "Created",
       render: (match) =>
-        formatDistanceToNow(new Date(match.created_at), { addSuffix: true }),
+        formatDistanceToNowIST(new Date(match.created_at), { addSuffix: true }),
     },
     {
       key: "actions",
@@ -330,7 +330,7 @@ const AdminTdmMatchesPage = () => {
 
                           <div className="text-gray-400">Created:</div>
                           <div className="truncate">
-                            {formatDistanceToNow(new Date(match.created_at), {
+                            {formatDistanceToNowIST(new Date(match.created_at), {
                               addSuffix: true,
                             })}
                           </div>

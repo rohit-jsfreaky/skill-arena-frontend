@@ -24,7 +24,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { TeamMemberSelector } from "./TeamMemberSelector";
 import { TdmMatchDetails } from "@/interface/tdmMatches";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNowIST } from "@/utils/timeUtils";
 import { showErrorToast } from "@/utils/toastUtils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -218,7 +218,7 @@ const JoinMatchForm = () => {
               <CardTitle className="text-white">Match Details</CardTitle>
               <CardDescription className="text-[#EAFFA9]">
                 Created{" "}
-                {formatDistanceToNow(new Date(match.created_at), {
+                {formatDistanceToNowIST(new Date(match.created_at), {
                   addSuffix: true,
                 })}
               </CardDescription>

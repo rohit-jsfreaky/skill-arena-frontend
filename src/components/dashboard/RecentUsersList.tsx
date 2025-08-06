@@ -46,12 +46,12 @@ const RecentUsersList = ({ users, title }: RecentUsersListProps) => {
               />
             ) : (
               <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-700 flex items-center justify-center text-white text-sm sm:text-base">
-                {user.username.charAt(0).toUpperCase()}
+                {user?.username?.charAt(0).toUpperCase() || "U"}
               </div>
             )}
             <div className="ml-2 sm:ml-4 flex-1 min-w-0">
               <p className="text-white font-medium text-sm sm:text-base truncate">
-                {user.username}
+                {user?.username}
               </p>
               <p className="text-gray-400 text-xs sm:text-sm truncate">
                 {user.name || "N/A"}

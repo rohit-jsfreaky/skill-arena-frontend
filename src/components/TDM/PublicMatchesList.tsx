@@ -10,7 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Users, Coins, Info } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNowIST } from "@/utils/timeUtils";
 import { TdmMatch } from "@/interface/tdmMatches";
 import { useNavigate } from "react-router-dom";
 import { useMYUser } from "@/context/UserContext";
@@ -103,7 +103,7 @@ export const PublicMatchesList: React.FC<PublicMatchesListProps> = ({
               </div>
               <CardDescription className="text-[#EAFFA9]">
                 Created{" "}
-                {formatDistanceToNow(new Date(match.created_at), {
+                {formatDistanceToNowIST(new Date(match.created_at), {
                   addSuffix: true,
                 })}
               </CardDescription>

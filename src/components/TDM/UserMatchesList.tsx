@@ -10,7 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {Clock, Users, Coins, Info, GamepadIcon } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNowIST } from "@/utils/timeUtils";
 import { TdmMatch } from "@/interface/tdmMatches";
 import { useNavigate } from "react-router-dom";
 
@@ -96,7 +96,7 @@ export const UserMatchesList: React.FC<UserMatchesListProps> = ({
               </div>
               <CardDescription className="flex items-center gap-1.5 text-[#EAFFA9]" >
                 <Clock className="h-3.5 w-3.5 text-[#EAFFA9]" />
-                {formatDistanceToNow(new Date(match.created_at), {
+                {formatDistanceToNowIST(new Date(match.created_at), {
                   addSuffix: true,
                 })}
               </CardDescription>

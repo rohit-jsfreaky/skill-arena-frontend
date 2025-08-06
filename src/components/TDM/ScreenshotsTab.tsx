@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Camera, Clock, CheckCircle2, XCircle, AlertTriangle, HelpCircle } from "lucide-react";
-import { format } from 'date-fns';
+import { formatToIST } from '@/utils/timeUtils';
 import { Badge } from "@/components/ui/badge";
 
 interface ScreenshotsTabProps {
@@ -60,11 +60,11 @@ const ScreenshotsTab: React.FC<ScreenshotsTabProps> = ({ matchDetails }) => {
   
   // Get upload timestamps if available
   const teamAUploadTime = teamAScreenshot?.upload_timestamp
-    ? format(new Date(teamAScreenshot.upload_timestamp), 'PPp')
+    ? formatToIST(new Date(teamAScreenshot.upload_timestamp), 'PPp')
     : null;
   
   const teamBUploadTime = teamBScreenshot?.upload_timestamp
-    ? format(new Date(teamBScreenshot.upload_timestamp), 'PPp')
+    ? formatToIST(new Date(teamBScreenshot.upload_timestamp), 'PPp')
     : null;
   
   // Find captains for both teams
