@@ -15,12 +15,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { FileUploader } from "@/components/FileUploader";
 import { useTDMMatch } from "@/hooks/useTDMMatch";
+import { useMYUser } from "@/context/UserContext";
 import { Coins, Upload, Flag, AlertTriangle, Camera } from "lucide-react";
 
 interface QuickActionsProps {
   matchDetails: any;
   isUserCaptain: boolean;
-  userTeam: any;
   userTeamId: number | null;
   opponentTeamId: number | null;
   navigate: any;
@@ -29,7 +29,6 @@ interface QuickActionsProps {
 const QuickActions: React.FC<QuickActionsProps> = ({
   matchDetails,
   isUserCaptain,
-  userTeam,
   userTeamId,
   opponentTeamId,
   navigate,
@@ -44,15 +43,43 @@ const QuickActions: React.FC<QuickActionsProps> = ({
     processTeamPayment,
     uploadMatchScreenshot,
     reportDispute,
-    loadMatchDetails,
   } = useTDMMatch();
+  
+  // Get fresh user team data directly from matchDetails to avoid stale state issues
+  const { myUser } = useMYUser();
+  const getCurrentUserTeam = () => {
+    if (!matchDetails || !myUser) return null;
+    
+    // Check Team A
+    const isInTeamA = matchDetails.team_a?.members?.some(
+      (member: any) => member.user_id === myUser.id
+    );
+    
+    if (isInTeamA) {
+      return matchDetails.team_a;
+    }
+    
+    // Check Team B
+    const isInTeamB = matchDetails.team_b?.members?.some(
+      (member: any) => member.user_id === myUser.id
+    );
+    
+    if (isInTeamB) {
+      return matchDetails.team_b;
+    }
+    
+    return null;
+  };
+  
+  const currentUserTeam = getCurrentUserTeam();
 
   const handleProcessPayment = async () => {
     if (matchDetails?.id && userTeamId) {
       setProcessing('payment');
       try {
         await processTeamPayment(matchDetails.id, userTeamId);
-        await loadMatchDetails(matchDetails.id);
+        // Reload the page to refresh all state
+        window.location.reload();
       } finally {
         setProcessing(null);
       }
@@ -66,7 +93,8 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         await uploadMatchScreenshot(matchDetails.id, userTeamId, screenshotUrl);
         setScreenshotUrl("");
         setScreenshotDialogOpen(false);
-        await loadMatchDetails(matchDetails.id);
+        // Reload the page to refresh all state
+        window.location.reload();
       } finally {
         setProcessing(null);
       }
@@ -80,7 +108,8 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         await reportDispute(matchDetails.id, opponentTeamId, disputeReason);
         setDisputeReason("");
         setDisputeDialogOpen(false);
-        await loadMatchDetails(matchDetails.id);
+        // Reload the page to refresh all state
+        window.location.reload();
       } finally {
         setProcessing(null);
       }
@@ -93,7 +122,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         <CardTitle>Quick Actions</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {!userTeam?.payment_completed &&
+        {!currentUserTeam?.payment_completed &&
           ["waiting", "team_a_ready", "team_b_ready"].includes(
             matchDetails.status
           ) && (
@@ -133,7 +162,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
               <DialogTrigger asChild>
                 <Button className="w-full" disabled={processing !== null}>
                   <Upload className="mr-2 h-4 w-4" />
-                  {userTeam?.screenshot
+                  {currentUserTeam?.screenshot
                     ? "Update Screenshot"
                     : "Upload Screenshot"}
                 </Button>
@@ -151,7 +180,6 @@ const QuickActions: React.FC<QuickActionsProps> = ({
                   onFileSelect={(url) => setScreenshotUrl(url)}
                   value={screenshotUrl}
                   accept="image/*"
-                  disabled={processing === 'screenshot'}
                 />
                 {screenshotUrl && (
                   <div className="mt-4">
@@ -181,7 +209,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black mr-2"></div>
                         Uploading...
                       </span>
-                    ) : userTeam?.screenshot ? (
+                    ) : currentUserTeam?.screenshot ? (
                       "Update Screenshot"
                     ) : (
                       "Upload Screenshot"
@@ -198,7 +226,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             <AlertTitle className="text-white">Screenshot Upload</AlertTitle>
             <AlertDescription className="text-[#EAFFA9]">
               Only the team captain can upload match result screenshots.
-              {userTeam?.screenshot
+              {currentUserTeam?.screenshot
                 ? " Your captain has already uploaded a screenshot."
                 : " Waiting for your captain to upload."}
             </AlertDescription>

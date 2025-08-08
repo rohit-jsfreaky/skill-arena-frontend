@@ -53,6 +53,8 @@ export const UserMatchesList: React.FC<UserMatchesListProps> = ({
         return "default";
       case "completed":
         return "default";
+      case "cancelled":
+        return "destructive";
       default:
         return "secondary";
     }
@@ -82,8 +84,8 @@ export const UserMatchesList: React.FC<UserMatchesListProps> = ({
         <p className="text-muted-foreground mb-4">
           You haven't joined any TDM matches yet.
         </p>
-        <Button onClick={() => navigate("/tdm/create-match")} variant="outline">
-          Create Your First Match
+        <Button onClick={() => navigate("/tdm/")} variant="outline">
+          Browse Available Matches
         </Button>
       </div>
     );
@@ -98,12 +100,18 @@ export const UserMatchesList: React.FC<UserMatchesListProps> = ({
         return (
           <Card
             key={match.id}
-            className="hover:shadow-md transition-shadow p-4 sm:p-6 bg-gradient-to-r from-black to-[#1A1A1A] border-[#BBF429] text-white"
+            className={`hover:shadow-md transition-shadow p-4 sm:p-6 border text-white ${
+              match.status === 'cancelled' 
+                ? 'bg-gradient-to-r from-red-900/20 to-red-800/20 border-red-500 opacity-75' 
+                : 'bg-gradient-to-r from-black to-[#1A1A1A] border-[#BBF429]'
+            }`}
           >
             <CardHeader>
               <div className="flex justify-between items-start">
                 <CardTitle className="text-lg">{match.game_name}</CardTitle>
-                <Badge variant={getStatusBadgeVariant(match.status)} className="text-[#BBF429]">
+                <Badge variant={getStatusBadgeVariant(match.status)} 
+                  className={match.status === 'cancelled' ? 'text-white' : 'text-[#BBF429]'}
+                >
                   {formatStatus(match.status)}
                 </Badge>
               </div>
@@ -115,6 +123,14 @@ export const UserMatchesList: React.FC<UserMatchesListProps> = ({
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
+              {match.status === 'cancelled' && (
+                <div className="bg-red-500/20 border border-red-500 p-3 rounded-md">
+                  <p className="text-red-400 text-sm font-medium">
+                    ⚠️ This match has been cancelled by an administrator
+                  </p>
+                </div>
+              )}
+
               <div className="flex justify-between items-center text-sm">
                 <div className="flex items-center gap-1">
                   <Coins size={16} />
@@ -151,18 +167,23 @@ export const UserMatchesList: React.FC<UserMatchesListProps> = ({
               <Button
                 className="flex-1"
                 onClick={() => navigate(`/tdm/match/${match.id}`)}
+                disabled={match.status === 'cancelled'}
+                variant={match.status === 'cancelled' ? 'secondary' : 'default'}
               >
                 <Info className="mr-2 h-4 w-4" />
-                View Match Details
+                {match.status === 'cancelled' ? 'Match Cancelled' : 'View Match Details'}
               </Button>
               
-              {/* Share Button */}
+              {/* Share Button - Still allow sharing cancelled matches */}
               <Button
                 variant="outline"
                 size="icon"
                 onClick={() => handleShareMatch(match)}
                 title="Share Match"
-                className="border-[#BBF429] text-[#BBF429] hover:bg-[#BBF429] hover:text-black"
+                className={match.status === 'cancelled' 
+                  ? 'border-red-500 text-red-400 hover:bg-red-500/10'
+                  : 'border-[#BBF429] text-[#BBF429] hover:bg-[#BBF429] hover:text-black'
+                }
               >
                 <Share2 className="h-4 w-4" />
               </Button>

@@ -20,11 +20,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Share2, Settings, Play } from "lucide-react";
+import { Eye, Share2, Settings, Play, X } from "lucide-react";
 import { LoadingSpinner } from "@/components/my-ui/Loader";
 import { toast } from "sonner";
 import { formatDistanceToNowIST } from "@/utils/timeUtils";
-import { adminGetAllTdmMatches } from "@/api/tdmMatches";
+import { adminGetAllTdmMatches, adminCancelTdmMatch } from "@/api/tdmMatches";
 import {
   generatePrivateMatchLink,
   adminSetRoomDetails,
@@ -50,6 +50,15 @@ const AdminTdmMatchesPage = () => {
   const [roomPassword, setRoomPassword] = useState<string>("");
   const [settingRoom, setSettingRoom] = useState(false);
   const [startingMatch, setStartingMatch] = useState<number | null>(null);
+  const [cancelDialog, setCancelDialog] = useState<{
+    open: boolean;
+    matchId: number | null;
+  }>({
+    open: false,
+    matchId: null,
+  });
+  const [cancelReason, setCancelReason] = useState<string>("");
+  const [cancelling, setCancelling] = useState(false);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -137,6 +146,34 @@ const AdminTdmMatchesPage = () => {
     } catch (error) {
       console.error("Error sharing match link:", error);
       toast.error("Failed to copy match link");
+    }
+  };
+
+  // Handle cancelling a match
+  const handleCancelMatch = async () => {
+    if (!cancelDialog.matchId || !cancelReason.trim()) {
+      toast.error("Please provide a reason for cancellation");
+      return;
+    }
+
+    try {
+      setCancelling(true);
+      const response = await adminCancelTdmMatch(cancelDialog.matchId, cancelReason.trim());
+      
+      if (response.data.success) {
+        toast.success("Match cancelled successfully");
+        setCancelDialog({ open: false, matchId: null });
+        setCancelReason("");
+        // Reload matches to reflect the change
+        loadMatches();
+      } else {
+        toast.error(response.data.message || "Failed to cancel match");
+      }
+    } catch (error) {
+      console.error("Error cancelling match:", error);
+      toast.error("Failed to cancel match");
+    } finally {
+      setCancelling(false);
     }
   };
 
@@ -335,6 +372,23 @@ const AdminTdmMatchesPage = () => {
                 )}
               </Button>
             )}
+
+          {/* Cancel Match Button - Available for non-cancelled and non-completed matches */}
+          {match.status !== "cancelled" && match.status !== "completed" && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                setCancelDialog({ open: true, matchId: match.id });
+                setCancelReason("");
+              }}
+              title="Cancel Match"
+              className="text-red-500 hover:bg-red-500/10"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       ),
     },
@@ -530,6 +584,23 @@ const AdminTdmMatchesPage = () => {
                                 Start
                               </Button>
                             )}
+
+                          {/* Cancel Match Button - Available for non-cancelled and non-completed matches */}
+                          {match.status !== "cancelled" && match.status !== "completed" && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setCancelDialog({ open: true, matchId: match.id });
+                                setCancelReason("");
+                              }}
+                              className="bg-red-500/10 text-red-500 border-red-500 hover:bg-red-500 hover:text-white"
+                            >
+                              <X className="mr-1 h-3 w-3" />
+                              Cancel
+                            </Button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -634,6 +705,64 @@ const AdminTdmMatchesPage = () => {
                 </span>
               ) : (
                 "Set Room Details"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Cancel Match Dialog */}
+      <Dialog
+        open={cancelDialog.open}
+        onOpenChange={(open) =>
+          setCancelDialog((prev) => ({ ...prev, open }))
+        }
+      >
+        <DialogContent className="bg-black text-white border-red-500">
+          <DialogHeader>
+            <DialogTitle className="text-red-500">Cancel Match</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to cancel match #{cancelDialog.matchId}? 
+              This action cannot be undone. Please provide a reason for cancellation.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="cancel-reason">Cancellation Reason</Label>
+              <Input
+                id="cancel-reason"
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                placeholder="Enter reason for cancellation (required)"
+                className="bg-black border-red-500 text-white"
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              onClick={() => {
+                setCancelDialog({ open: false, matchId: null });
+                setCancelReason("");
+              }}
+              disabled={cancelling}
+              // variant="outline"
+            >
+              Keep Match
+            </Button>
+            <Button
+              onClick={handleCancelMatch}
+              disabled={!cancelReason.trim() || cancelling}
+              className="bg-red-500 text-white hover:bg-red-600"
+            >
+              {cancelling ? (
+                <div className="flex items-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Cancelling...
+                </div>
+              ) : (
+                "Cancel Match"
               )}
             </Button>
           </DialogFooter>

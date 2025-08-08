@@ -137,8 +137,6 @@ const MatchDetailsPage = () => {
     <div className=" py-4 w-full px-4">
       <MatchHeader
         matchDetails={matchDetails}
-        isUserCaptain={isUserCaptain}
-        userTeam={userTeam}
         navigate={navigate}
       />
 
@@ -238,7 +236,6 @@ const MatchDetailsPage = () => {
           <QuickActions
             matchDetails={matchDetails}
             isUserCaptain={isUserCaptain}
-            userTeam={userTeam}
             userTeamId={userTeamId}
             opponentTeamId={opponentTeamId}
             navigate={navigate}
