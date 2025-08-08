@@ -51,18 +51,18 @@ const AdminTdmMatchReviewPage = () => {
   }
 
   // Count pending disputes
-  const pendingDisputesCount = match.disputes?.filter(d => d.status === "pending").length || 0;
+  const pendingDisputesCount =
+    match.disputes?.filter((d) => d.status === "pending").length || 0;
 
   return (
     <div className="w-full min-h-screen flex-col gap-4 sm:gap-8 bg-gradient-to-r from-black via-black to-[#BBF429] p-3 sm:p-4">
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
         {/* Back button - full width on small screens */}
         <Button
-          variant="outline"
           className="mb-4 sm:mb-6 w-full sm:w-auto border-[#BBF429] text-[#BBF429] hover:bg-[#BBF429] hover:text-black"
-          onClick={() => navigate("/admin/tdm/disputes")}
+          onClick={() => navigate("/admin/tdm/matches")}
         >
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Disputes
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Matches
         </Button>
 
         {/* Header section - stacks vertically on mobile */}
@@ -120,9 +120,10 @@ const AdminTdmMatchReviewPage = () => {
             size="lg"
             disabled={!selectedWinnerTeamId || !!match.winner_team_id}
             onClick={() => {
-              setAdminNotes(pendingDisputesCount > 0 
-                ? `Winner selected based on screenshot evidence. This also resolves ${pendingDisputesCount} pending dispute(s).`
-                : "Winner selected based on screenshot evidence."
+              setAdminNotes(
+                pendingDisputesCount > 0
+                  ? `Winner selected based on screenshot evidence. This also resolves ${pendingDisputesCount} pending dispute(s).`
+                  : "Winner selected based on screenshot evidence."
               );
               setDialogOpen(true);
             }}
@@ -131,7 +132,10 @@ const AdminTdmMatchReviewPage = () => {
             <Trophy className="mr-2 h-5 w-5 sm:h-6 sm:w-6" />
             <span className="text-sm sm:text-base">
               Award Prize to Selected Team
-              {pendingDisputesCount > 0 && ` (Resolves ${pendingDisputesCount} Dispute${pendingDisputesCount === 1 ? '' : 's'})`}
+              {pendingDisputesCount > 0 &&
+                ` (Resolves ${pendingDisputesCount} Dispute${
+                  pendingDisputesCount === 1 ? "" : "s"
+                })`}
             </span>
           </Button>
         </div>

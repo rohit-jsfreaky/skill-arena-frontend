@@ -85,3 +85,18 @@ export const getTdmStatistics = async () => {
   const response = await api.get(`api/admin/tdm/statistics?admin=true`);
   return response.data;
 };
+
+// Admin: Set room details for a TDM match
+export const adminSetRoomDetails = async (matchId: number, data: {
+  room_id: string;
+  room_password: string;
+}) => {
+  const response = await api.post(`api/admin/tdm/matches/${matchId}/set-room-details?admin=true`, data);
+  return response.data;
+};
+
+// Admin: Start a TDM match
+export const adminStartTdmMatch = async (matchId: number) => {
+  const response = await api.post(`api/admin/tdm/matches/${matchId}/start?admin=true`);
+  return response.data;
+};

@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
@@ -9,7 +8,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Coins, Trophy, Users } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useMYUser } from "@/context/UserContext";
 import { PublicMatchesList } from "@/components/TDM/PublicMatchesList";
 import { UserMatchesList } from "@/components/TDM/UserMatchesList";
@@ -17,7 +15,6 @@ import NotLoginCard from "@/components/my-ui/NotLoginCard";
 import { useTDMMatch } from "@/hooks/useTDMMatch";
 
 const TDMPage = () => {
-  const navigate = useNavigate();
   const { myUser } = useMYUser();
   const {
     publicMatches,
@@ -104,7 +101,9 @@ const TDMPage = () => {
                 <Trophy className="h-5 w-5 text-yellow-500" />
                 TDM Rewards
               </CardTitle>
-              <CardDescription className="text-[#EAFFA9]">Win and earn rewards</CardDescription>
+              <CardDescription className="text-[#EAFFA9]">
+                Win and earn rewards
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center">
@@ -128,12 +127,6 @@ const TDMPage = () => {
                 </div>
                 <span>90% of total entry fees</span>
               </div>
-              <Button
-                onClick={() => navigate("/tdm/create-match")}
-                className="w-full"
-              >
-                Create Match
-              </Button>
             </CardContent>
           </Card>
 
@@ -148,7 +141,8 @@ const TDMPage = () => {
               <div className="space-y-2">
                 <h4 className="font-medium">1. Create a Match</h4>
                 <p className="text-sm text-[#EAFFA9]">
-                  Form a team and create a public or private match with your preferred team size
+                  Form a team and create a public or private match with your
+                  preferred team size
                 </p>
               </div>
               <div className="space-y-2">

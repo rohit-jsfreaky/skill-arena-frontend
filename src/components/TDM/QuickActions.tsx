@@ -41,24 +41,11 @@ const QuickActions: React.FC<QuickActionsProps> = ({
   const [disputeDialogOpen, setDisputeDialogOpen] = useState(false);
   
   const {
-    startMatch,
     processTeamPayment,
     uploadMatchScreenshot,
     reportDispute,
     loadMatchDetails,
   } = useTDMMatch();
-
-  const handleStartMatch = async () => {
-    if (matchDetails?.id) {
-      setProcessing('start');
-      try {
-        await startMatch(matchDetails.id);
-        await loadMatchDetails(matchDetails.id);
-      } finally {
-        setProcessing(null);
-      }
-    }
-  };
 
   const handleProcessPayment = async () => {
     if (matchDetails?.id && userTeamId) {
@@ -129,23 +116,15 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             </Button>
           )}
 
-        {matchDetails.status === "confirmed" && isUserCaptain && (
-          <Button 
-            onClick={handleStartMatch} 
-            className="w-full"
-            disabled={processing !== null || !matchDetails.room_id}
-          >
-            {processing === 'start' ? (
-              <span className="flex items-center">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black mr-2"></div>
-                Starting...
-              </span>
-            ) : !matchDetails.room_id ? (
-              "Set Room Details First"
-            ) : (
-              "Start Match"
-            )}
-          </Button>
+        {/* Start Match button removed - Admin only functionality */}
+        {matchDetails.status === "confirmed" && (
+          <Alert className="bg-black border-[#BBF429]">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle className="text-white">Admin Action Required</AlertTitle>
+            <AlertDescription className="text-[#EAFFA9]">
+              Only administrators can start matches. Please wait for an admin to start this match.
+            </AlertDescription>
+          </Alert>
         )}
 
         {matchDetails.status === "in_progress" &&

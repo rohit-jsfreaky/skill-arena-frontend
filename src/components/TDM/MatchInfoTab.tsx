@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Label } from "@/components/ui/label";
 import { Clock, Clipboard, AlertCircle, Trophy, Users } from "lucide-react";
 import { formatToIST } from "@/utils/timeUtils";
 import { showSuccessToast } from "@/utils/toastUtils";
@@ -14,26 +12,19 @@ import { TdmMatchDetails } from "@/interface/tdmMatches";
 
 interface MatchInfoTabProps {
   matchDetails: any;
-  isMatchCreator: boolean;
   loadMatchDetails: (matchId: number) => Promise<TdmMatchDetails | null>;
 }
 
 const MatchInfoTab: React.FC<MatchInfoTabProps> = ({
   matchDetails,
-  isMatchCreator,
   loadMatchDetails,
 }) => {
-  const { checkMatchReadiness, setRoomDetails } = useTDMMatch();
+  const { checkMatchReadiness } = useTDMMatch();
   // Get team size from match details, default to 4 if not specified 
   const teamSize = matchDetails?.team_size || 4;
   const totalPlayers = teamSize * 2; // Total players across both teams
 
   const [readinessInfo, setReadinessInfo] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-
-  const [roomId, setRoomId] = useState<string>("");
-  const [roomPassword, setRoomPassword] = useState<string>("");
-  const [settingRoom, setSettingRoom] = useState(false);
 
   useEffect(() => {
     const fetchReadiness = async () => {
@@ -43,12 +34,10 @@ const MatchInfoTab: React.FC<MatchInfoTabProps> = ({
           matchDetails.status
         )
       ) {
-        setLoading(true);
         const info = await checkMatchReadiness(matchDetails.id);
         if (info) {
           setReadinessInfo(info);
         }
-        setLoading(false);
       }
     };
 
@@ -58,20 +47,6 @@ const MatchInfoTab: React.FC<MatchInfoTabProps> = ({
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     showSuccessToast("Copied to clipboard!");
-  };
-
-  const handleSetRoomDetails = async () => {
-    if (!roomId || !roomPassword) {
-      return;
-    }
-
-    setSettingRoom(true);
-    try {
-      await setRoomDetails(matchDetails.id, roomId, roomPassword);
-      loadMatchDetails(matchDetails.id);
-    } finally {
-      setSettingRoom(false);
-    }
   };
 
   return (
@@ -254,62 +229,18 @@ const MatchInfoTab: React.FC<MatchInfoTabProps> = ({
               <div>
                 <h3 className="font-medium mb-1">Room Details</h3>
 
-                {isMatchCreator && !matchDetails.room_id && (
-                  <div className="space-y-3 bg-[#BBF429]/10 p-4 rounded-md border border-[#BBF429]/30">
+                {/* Room details setting removed - Admin only functionality */}
+                {!matchDetails.room_id && (
+                  <div className="bg-secondary/30 p-3 rounded-md">
                     <Alert className="bg-black border-[#BBF429]">
+                      <AlertCircle className="h-4 w-4" />
                       <AlertTitle className="text-white">
-                        Set Room Details
+                        Admin Action Required
                       </AlertTitle>
                       <AlertDescription className="text-[#EAFFA9]">
-                        As the match creator, you need to set up the room
-                        details so players can join.
+                        Only administrators can set room details. Please wait for an admin to set up the room.
                       </AlertDescription>
                     </Alert>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="room-id">Room ID</Label>
-                      <Input
-                        id="room-id"
-                        value={roomId}
-                        onChange={(e) => setRoomId(e.target.value)}
-                        placeholder="Enter room ID"
-                        className="bg-black border-[#BBF429] text-white"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="room-password">Room Password</Label>
-                      <Input
-                        id="room-password"
-                        value={roomPassword}
-                        onChange={(e) => setRoomPassword(e.target.value)}
-                        placeholder="Enter room password"
-                        className="bg-black border-[#BBF429] text-white"
-                      />
-                    </div>
-
-                    <Button
-                      onClick={handleSetRoomDetails}
-                      disabled={!roomId || !roomPassword || settingRoom}
-                      className="w-full"
-                    >
-                      {settingRoom ? (
-                        <span className="flex items-center">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black mr-2"></div>
-                          Setting Room Details...
-                        </span>
-                      ) : (
-                        "Set Room Details"
-                      )}
-                    </Button>
-                  </div>
-                )}
-
-                {!isMatchCreator && !matchDetails.room_id && (
-                  <div className="bg-secondary/30 p-3 rounded-md">
-                    <p className="text-sm text-center">
-                      Waiting for the match creator to set up room details...
-                    </p>
                   </div>
                 )}
 

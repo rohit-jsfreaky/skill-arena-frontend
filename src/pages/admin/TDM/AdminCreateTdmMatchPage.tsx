@@ -234,7 +234,7 @@ const AdminCreateTdmMatchPage: React.FC = () => {
                 </Button>
                 <Button
                   onClick={resetForm}
-                  variant="outline"
+                  // variant="outline"
                   className="flex-1 border-[#BBF429] text-[#BBF429] hover:bg-[#BBF429] hover:text-black"
                 >
                   Reset

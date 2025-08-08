@@ -9,11 +9,12 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, Coins, Info } from "lucide-react";
+import { Users, Coins, Info, Share2 } from "lucide-react";
 import { formatDistanceToNowIST } from "@/utils/timeUtils";
 import { TdmMatch } from "@/interface/tdmMatches";
 import { useNavigate } from "react-router-dom";
 import { useMYUser } from "@/context/UserContext";
+import { toast } from "sonner";
 import {
   Tooltip,
   TooltipContent,
@@ -32,6 +33,18 @@ export const PublicMatchesList: React.FC<PublicMatchesListProps> = ({
 }) => {
   const navigate = useNavigate();
   const { myUser } = useMYUser();
+
+  // Handle sharing match link
+  const handleShareMatch = async (match: TdmMatch) => {
+    try {
+      const shareableLink = `${window.location.origin}/tdm/match/${match.id}`;
+      await navigator.clipboard.writeText(shareableLink);
+      toast.success("Match link copied to clipboard!");
+    } catch (error) {
+      console.error("Error sharing match link:", error);
+      toast.error("Failed to copy match link");
+    }
+  };
 
   // Check if user is already a member of a match
   const isUserInMatch = (match: TdmMatch) => {
@@ -137,12 +150,12 @@ export const PublicMatchesList: React.FC<PublicMatchesListProps> = ({
                 <p>Waiting for Team B to join</p>
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="gap-2">
               {userIsInMatch ? (
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="w-full">
+                      <div className="flex-1">
                         <Button
                           className="w-full"
                           onClick={() => navigate(`/tdm/match/${match.id}`)}
@@ -159,12 +172,23 @@ export const PublicMatchesList: React.FC<PublicMatchesListProps> = ({
                 </TooltipProvider>
               ) : (
                 <Button
-                  className="w-full"
+                  className="flex-1"
                   onClick={() => navigate(`/tdm/join-match/${match.id}`)}
                 >
                   Join as Team B
                 </Button>
               )}
+              
+              {/* Share Button */}
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => handleShareMatch(match)}
+                title="Share Match"
+                className="border-[#BBF429] text-[#BBF429] hover:bg-[#BBF429] hover:text-black"
+              >
+                <Share2 className="h-4 w-4" />
+              </Button>
             </CardFooter>
           </Card>
         );

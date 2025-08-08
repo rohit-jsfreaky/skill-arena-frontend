@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Coins, ArrowLeftSquare } from "lucide-react";
+import { Coins, ArrowLeftSquare, Share2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import {
   Dialog,
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { useTDMMatch } from "@/hooks/useTDMMatch";
 import { useMYUser } from "@/context/UserContext";
+import { toast } from "sonner";
 
 interface MatchHeaderProps {
   matchDetails: any;
@@ -29,9 +30,21 @@ const MatchHeader: React.FC<MatchHeaderProps> = ({
   userTeam,
   navigate,
 }) => {
-  const { startMatch, processTeamPayment, cancelMatch, loadMatchDetails } = useTDMMatch();
+  const { processTeamPayment, cancelMatch, loadMatchDetails } = useTDMMatch();
   const { myUser } = useMYUser();
   const [isProcessingAction, setIsProcessingAction] = useState<string | null>(null);
+
+  // Handle sharing match link
+  const handleShareMatch = async () => {
+    try {
+      const shareableLink = `${window.location.origin}/tdm/match/${matchDetails?.id}`;
+      await navigator.clipboard.writeText(shareableLink);
+      toast.success("Match link copied to clipboard!");
+    } catch (error) {
+      console.error("Error sharing match link:", error);
+      toast.error("Failed to copy match link");
+    }
+  };
 
   // Check if current user has paid
   const hasCurrentUserPaid = () => {
@@ -50,19 +63,6 @@ const MatchHeader: React.FC<MatchHeaderProps> = ({
       try {
         await processTeamPayment(matchDetails.id, userTeam.id);
         // Reload match details to get updated payment status
-        await loadMatchDetails(matchDetails.id);
-      } finally {
-        setIsProcessingAction(null);
-      }
-    }
-  };
-
-  const handleStartMatch = async () => {
-    if (matchDetails?.id) {
-      setIsProcessingAction('start');
-      try {
-        await startMatch(matchDetails.id);
-        // Reload match details to get updated status
         await loadMatchDetails(matchDetails.id);
       } finally {
         setIsProcessingAction(null);
@@ -145,6 +145,16 @@ const MatchHeader: React.FC<MatchHeaderProps> = ({
       </div>
 
       <div className="flex flex-wrap gap-2">
+        {/* Share Match Button */}
+        <Button
+          variant="outline"
+          onClick={handleShareMatch}
+          className="bg-black text-white border-[#BBF429] hover:bg-[#BBF429] hover:text-black"
+        >
+          <Share2 className="mr-2 h-4 w-4" />
+          Share Match
+        </Button>
+
         {/* Conditional actions based on match status */}
         {matchDetails.status === "waiting" && isUserCaptain && userTeam && (
           <Dialog>
@@ -186,23 +196,7 @@ const MatchHeader: React.FC<MatchHeaderProps> = ({
           </Dialog>
         )}
 
-        {matchDetails.status === "confirmed" && isUserCaptain && (
-          <Button 
-            onClick={handleStartMatch}
-            disabled={!matchDetails.room_id || !matchDetails.room_password || isProcessingAction !== null}
-          >
-            {isProcessingAction === 'start' ? (
-              <div className="flex items-center">
-                <span className="inline-block h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin mr-2"></span>
-                Starting...
-              </div>
-            ) : !matchDetails.room_id ? (
-              "Set Room Details First"
-            ) : (
-              "Start Match"
-            )}
-          </Button>
-        )}
+        {/* Start Match button removed - Admin only functionality */}
 
         {!hasCurrentUserPaid() &&
           ["waiting", "team_a_ready", "team_b_ready"].includes(

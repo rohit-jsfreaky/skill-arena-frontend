@@ -9,15 +9,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Share2 } from "lucide-react";
+import { Eye, Share2, Settings, Play } from "lucide-react";
 import { LoadingSpinner } from "@/components/my-ui/Loader";
 import { toast } from "sonner";
 import { formatDistanceToNowIST } from "@/utils/timeUtils";
 import { adminGetAllTdmMatches } from "@/api/tdmMatches";
-import { generatePrivateMatchLink } from "@/api/admin/tdm";
+import {
+  generatePrivateMatchLink,
+  adminSetRoomDetails,
+  adminStartTdmMatch,
+} from "@/api/admin/tdm";
 import { TdmMatch } from "@/interface/tdmMatches";
-import { Pagination } from "@/components/ui/pagination";
 import Table, { TableColumn } from "@/containers/Table/Table";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
@@ -26,6 +39,17 @@ const AdminTdmMatchesPage = () => {
   const [matches, setMatches] = useState<TdmMatch[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [roomDetailsDialog, setRoomDetailsDialog] = useState<{
+    open: boolean;
+    matchId: number | null;
+  }>({
+    open: false,
+    matchId: null,
+  });
+  const [roomId, setRoomId] = useState<string>("");
+  const [roomPassword, setRoomPassword] = useState<string>("");
+  const [settingRoom, setSettingRoom] = useState(false);
+  const [startingMatch, setStartingMatch] = useState<number | null>(null);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -84,27 +108,93 @@ const AdminTdmMatchesPage = () => {
     }
   };
 
-  // Handle sharing private match link
-  const handleShareMatch = async (match: TdmMatch) => {
-    if (match.match_type !== "private") {
-      toast.error("Only private matches can be shared");
+  // Handle sharing match link (user-facing route)
+  const handleShareMatchLink = async (match: TdmMatch) => {
+    try {
+      let shareableLink;
+
+      if (match.match_type === "private") {
+        // For private matches, generate a special shareable link
+        const response = await generatePrivateMatchLink(match.id);
+        if (response.success && response.data?.shareable_link) {
+          shareableLink = response.data.shareable_link;
+        } else {
+          toast.error(response.message || "Failed to generate share link");
+          return;
+        }
+      } else {
+        // For public matches, just share the direct user route
+        shareableLink = `${window.location.origin}/tdm/match/${match.id}`;
+      }
+
+      // Copy to clipboard
+      await navigator.clipboard.writeText(shareableLink);
+      toast.success(
+        `${
+          match.match_type === "private" ? "Private match" : "Match"
+        } link copied to clipboard!`
+      );
+    } catch (error) {
+      console.error("Error sharing match link:", error);
+      toast.error("Failed to copy match link");
+    }
+  };
+
+  // Handle opening room details dialog
+  const handleOpenRoomDetails = (matchId: number) => {
+    setRoomDetailsDialog({ open: true, matchId });
+    setRoomId("");
+    setRoomPassword("");
+  };
+
+  // Handle setting room details
+  const handleSetRoomDetails = async () => {
+    if (!roomDetailsDialog.matchId || !roomId || !roomPassword) {
+      toast.error("Please fill in all room details");
       return;
     }
 
     try {
-      const response = await generatePrivateMatchLink(match.id);
+      setSettingRoom(true);
+      const response = await adminSetRoomDetails(roomDetailsDialog.matchId, {
+        room_id: roomId,
+        room_password: roomPassword,
+      });
+
       if (response.success) {
-        const shareableLink = response.data.shareable_link;
-        
-        // Copy to clipboard
-        await navigator.clipboard.writeText(shareableLink);
-        toast.success("Private match link copied to clipboard!");
+        toast.success("Room details set successfully");
+        setRoomDetailsDialog({ open: false, matchId: null });
+        setRoomId("");
+        setRoomPassword("");
+        loadMatches(); // Reload matches to show updated room details
       } else {
-        toast.error(response.message || "Failed to generate share link");
+        toast.error(response.message || "Failed to set room details");
       }
     } catch (error) {
-      console.error("Error generating share link:", error);
-      toast.error("Failed to generate share link");
+      console.error("Error setting room details:", error);
+      toast.error("Failed to set room details");
+    } finally {
+      setSettingRoom(false);
+    }
+  };
+
+  // Handle starting a match
+  const handleStartMatch = async (matchId: number) => {
+    try {
+      setStartingMatch(matchId);
+      const response = await adminStartTdmMatch(matchId);
+
+      if (response.success) {
+        toast.success("Match started successfully");
+        loadMatches(); // Reload matches to show updated status
+      } else {
+        toast.error(response.message || "Failed to start match");
+      }
+    } catch (error) {
+      console.error("Error starting match:", error);
+      toast.error("Failed to start match");
+    } finally {
+      setStartingMatch(null);
     }
   };
 
@@ -198,19 +288,53 @@ const AdminTdmMatchesPage = () => {
           >
             <Eye className="h-4 w-4" />
           </Button>
-          {match.match_type === "private" && (
+
+          {/* Share Match Link - Available for all match types */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleShareMatchLink(match);
+            }}
+            title="Share Match Link"
+          >
+            <Share2 className="h-4 w-4" />
+          </Button>
+
+          {match.status === "confirmed" && !match.room_id && (
             <Button
               variant="ghost"
               size="icon"
               onClick={(e) => {
                 e.stopPropagation();
-                handleShareMatch(match);
+                handleOpenRoomDetails(match.id);
               }}
-              title="Share Private Match Link"
+              title="Set Room Details"
             >
-              <Share2 className="h-4 w-4" />
+              <Settings className="h-4 w-4" />
             </Button>
           )}
+          {match.status === "confirmed" &&
+            match.room_id &&
+            match.room_password && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleStartMatch(match.id);
+                }}
+                disabled={startingMatch === match.id}
+                title="Start Match"
+              >
+                {startingMatch === match.id ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                ) : (
+                  <Play className="h-4 w-4" />
+                )}
+              </Button>
+            )}
         </div>
       ),
     },
@@ -283,7 +407,7 @@ const AdminTdmMatchesPage = () => {
                           <span className="font-medium text-lg">
                             #{match.id}
                           </span>
-                          <Badge className={getStatusBadgeColor(match.status) } >
+                          <Badge className={getStatusBadgeColor(match.status)}>
                             {match.status.replace(/_/g, " ")}
                           </Badge>
                         </div>
@@ -295,7 +419,10 @@ const AdminTdmMatchesPage = () => {
                           >
                             {match.game_name}
                           </Badge>
-                          <Badge variant="outline" className="bg-black text-white">
+                          <Badge
+                            variant="outline"
+                            className="bg-black text-white"
+                          >
                             {match.match_type === "public"
                               ? "Public"
                               : "Private"}
@@ -330,10 +457,79 @@ const AdminTdmMatchesPage = () => {
 
                           <div className="text-gray-400">Created:</div>
                           <div className="truncate">
-                            {formatDistanceToNowIST(new Date(match.created_at), {
-                              addSuffix: true,
-                            })}
+                            {formatDistanceToNowIST(
+                              new Date(match.created_at),
+                              {
+                                addSuffix: true,
+                              }
+                            )}
                           </div>
+                        </div>
+
+                        {/* Mobile Action Buttons */}
+                        <div className="flex gap-2 mt-4 pt-3 border-t border-gray-600">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/admin/tdm/matches/${match.id}/review`);
+                            }}
+                            className="bg-black text-white border-[#BBF429] hover:bg-[#BBF429] hover:text-black"
+                          >
+                            <Eye className="mr-1 h-3 w-3" />
+                            View
+                          </Button>
+
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleShareMatchLink(match);
+                            }}
+                            className="bg-black text-white border-[#BBF429] hover:bg-[#BBF429] hover:text-black"
+                          >
+                            <Share2 className="mr-1 h-3 w-3" />
+                            Share
+                          </Button>
+
+                          {match.status === "confirmed" && !match.room_id && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenRoomDetails(match.id);
+                              }}
+                              className="bg-black text-white border-[#BBF429] hover:bg-[#BBF429] hover:text-black"
+                            >
+                              <Settings className="mr-1 h-3 w-3" />
+                              Room
+                            </Button>
+                          )}
+
+                          {match.status === "confirmed" &&
+                            match.room_id &&
+                            match.room_password && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleStartMatch(match.id);
+                                }}
+                                disabled={startingMatch === match.id}
+                                className="bg-black text-white border-[#BBF429] hover:bg-[#BBF429] hover:text-black"
+                              >
+                                {startingMatch === match.id ? (
+                                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-current mr-1"></div>
+                                ) : (
+                                  <Play className="mr-1 h-3 w-3" />
+                                )}
+                                Start
+                              </Button>
+                            )}
                         </div>
                       </div>
                     ))}
@@ -341,17 +537,108 @@ const AdminTdmMatchesPage = () => {
                 )}
 
                 <div className="mt-6 flex justify-center">
-                  <Pagination
-                    currentPage={pagination.currentPage}
-                    totalPages={pagination.totalPages}
-                    onPageChange={handleChangePage}
-                  />
+                  {pagination.totalPages > 1 && (
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          handleChangePage(pagination.currentPage - 1)
+                        }
+                        disabled={!pagination.hasPrevPage}
+                        className="bg-black text-white border-[#BBF429] hover:bg-[#BBF429] hover:text-black"
+                      >
+                        Previous
+                      </Button>
+
+                      <span className="text-white">
+                        Page {pagination.currentPage} of {pagination.totalPages}
+                      </span>
+
+                      <Button
+                        variant="outline"
+                        onClick={() =>
+                          handleChangePage(pagination.currentPage + 1)
+                        }
+                        disabled={!pagination.hasNextPage}
+                        className="bg-black text-white border-[#BBF429] hover:bg-[#BBF429] hover:text-black"
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </>
             )}
           </CardContent>
         </Card>
       </div>
+
+      {/* Room Details Dialog */}
+      <Dialog
+        open={roomDetailsDialog.open}
+        onOpenChange={(open) =>
+          setRoomDetailsDialog((prev) => ({ ...prev, open }))
+        }
+      >
+        <DialogContent className="bg-black text-white border-[#BBF429]">
+          <DialogHeader>
+            <DialogTitle>Set Room Details</DialogTitle>
+            <DialogDescription>
+              Enter the room ID and password for match{" "}
+              {roomDetailsDialog.matchId}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="room-id">Room ID</Label>
+              <Input
+                id="room-id"
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value)}
+                placeholder="Enter room ID"
+                className="bg-black border-[#BBF429] text-white"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="room-password">Room Password</Label>
+              <Input
+                id="room-password"
+                value={roomPassword}
+                onChange={(e) => setRoomPassword(e.target.value)}
+                placeholder="Enter room password"
+                className="bg-black border-[#BBF429] text-white"
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              onClick={() =>
+                setRoomDetailsDialog({ open: false, matchId: null })
+              }
+              disabled={settingRoom}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSetRoomDetails}
+              disabled={!roomId || !roomPassword || settingRoom}
+              className="bg-[#BBF429] text-black hover:bg-[#a9e01c]"
+            >
+              {settingRoom ? (
+                <span className="flex items-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black mr-2"></div>
+                  Setting...
+                </span>
+              ) : (
+                "Set Room Details"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

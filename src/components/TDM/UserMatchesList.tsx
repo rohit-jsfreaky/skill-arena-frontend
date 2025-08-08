@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {Clock, Users, Coins, Info, GamepadIcon } from "lucide-react";
+import {Clock, Users, Coins, Info, GamepadIcon, Share2 } from "lucide-react";
 import { formatDistanceToNowIST } from "@/utils/timeUtils";
 import { TdmMatch } from "@/interface/tdmMatches";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface UserMatchesListProps {
   matches: TdmMatch[];
@@ -25,6 +26,18 @@ export const UserMatchesList: React.FC<UserMatchesListProps> = ({
   isLoading,
 }) => {
   const navigate = useNavigate();
+
+  // Handle sharing match link
+  const handleShareMatch = async (match: TdmMatch) => {
+    try {
+      const shareableLink = `${window.location.origin}/tdm/match/${match.id}`;
+      await navigator.clipboard.writeText(shareableLink);
+      toast.success("Match link copied to clipboard!");
+    } catch (error) {
+      console.error("Error sharing match link:", error);
+      toast.error("Failed to copy match link");
+    }
+  };
 
   // Status badge styling
   const getStatusBadgeVariant = (status: string) => {
@@ -134,13 +147,24 @@ export const UserMatchesList: React.FC<UserMatchesListProps> = ({
                 </p>
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="gap-2">
               <Button
-                className="w-full"
+                className="flex-1"
                 onClick={() => navigate(`/tdm/match/${match.id}`)}
               >
                 <Info className="mr-2 h-4 w-4" />
                 View Match Details
+              </Button>
+              
+              {/* Share Button */}
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => handleShareMatch(match)}
+                title="Share Match"
+                className="border-[#BBF429] text-[#BBF429] hover:bg-[#BBF429] hover:text-black"
+              >
+                <Share2 className="h-4 w-4" />
               </Button>
             </CardFooter>
           </Card>
