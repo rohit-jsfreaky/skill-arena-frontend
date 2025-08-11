@@ -5,11 +5,13 @@ type TournamentParticipantsProps = {
     >
   ) => void;
   max_participants: number;
+  disabled?: boolean;
 };
 
 const TournamentParticipants = ({
   max_participants,
   handleChange,
+  disabled = false,
 }: TournamentParticipantsProps) => {
   return (
     <div>
@@ -23,8 +25,16 @@ const TournamentParticipants = ({
         onChange={handleChange}
         min="2"
         required
-        className="w-full text-white px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        disabled={disabled}
+        className={`w-full text-white px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+          disabled ? 'bg-gray-600 opacity-50 cursor-not-allowed' : ''
+        }`}
       />
+      {disabled && (
+        <p className="text-xs text-gray-400 mt-1">
+          Auto-calculated for slot-based tournaments
+        </p>
+      )}
     </div>
   );
 };

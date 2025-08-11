@@ -13,6 +13,8 @@ export interface TournamentFormData {
   description: string;
   image_url: string;
   team_mode: "solo" | "duo" | "4v4";
+  tournament_mode?: "solo" | "duo" | "4v4" | "6v6" | "8v8"; // New slot-based mode
+  max_groups?: number; // New for slot-based tournaments
   entry_fee_normal: number;
   entry_fee_pro: number;
   max_participants: number;
@@ -33,6 +35,8 @@ export interface Tournament {
   description: string;
   image: string;
   team_mode: string;
+  tournament_mode?: "solo" | "duo" | "4v4" | "6v6" | "8v8"; // New slot-based mode
+  max_groups?: number; // New for slot-based tournaments
   entry_fee_normal: number;
   entry_fee_pro: number;
   prize_pool: number;
@@ -45,6 +49,42 @@ export interface Tournament {
   room_password?: string;
   current_participants: number;
   youtube_live_url?: string | null;
+}
+
+// New interfaces for slot-based tournaments
+export interface TournamentGroup {
+  id: number;
+  group_number: number;
+  is_full: boolean;
+  current_members: number;
+  max_members: number;
+}
+
+export interface TournamentGroupsResponse {
+  tournament_mode: "solo" | "duo" | "4v4" | "6v6" | "8v8";
+  max_groups: number;
+  slots_per_group: number;
+  groups: TournamentGroup[];
+  user_group: {
+    group_id: number;
+    group_number: number;
+  } | null;
+}
+
+export interface SlotBasedTournamentFormData {
+  name: string;
+  game_name: string;
+  description: string;
+  image: string;
+  tournament_mode: "solo" | "duo" | "4v4" | "6v6" | "8v8";
+  max_groups: number;
+  entry_fee_normal: number;
+  entry_fee_pro: number;
+  prize_pool: number;
+  start_time: string;
+  end_time: string;
+  rules: string;
+  youtube_live_url?: string;
 }
 
 export interface PastTournament {

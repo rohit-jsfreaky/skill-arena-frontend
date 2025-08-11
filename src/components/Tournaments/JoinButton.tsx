@@ -13,6 +13,8 @@ interface JoinButtonProps {
   status?: string;
   getEntryFee?: () => string | number;
   navigate: NavigateFunction;
+  disableJoinButton?: boolean;
+  disableReason?: string;
 }
 
 const JoinButton: React.FC<JoinButtonProps> = ({
@@ -25,8 +27,21 @@ const JoinButton: React.FC<JoinButtonProps> = ({
   isFull,
   status,
   getEntryFee,
-  navigate
+  navigate,
+  disableJoinButton,
+  disableReason
 }) => {
+  // If the main button must be disabled (e.g., slot-based), render a disabled button with context
+  if (disableJoinButton) {
+    return (
+      <div className="flex flex-col items-center gap-4">
+        <button className="px-8 py-3 rounded-lg font-medium bg-gray-600/50 cursor-not-allowed text-gray-400">
+          {disableReason || "Select a group to join"}
+        </button>
+      </div>
+    );
+  }
+
   if (!onJoinTournament) return null;
   
   return (

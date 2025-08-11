@@ -26,6 +26,8 @@ type TournamentDetailsCardProps = {
   insufficientFunds?: boolean | null;
   navigate: NavigateFunction;
   participants: Participant[];
+  disableJoinButton?: boolean;
+  disableReason?: string;
 };
 
 const TournamentDetailsCard = ({
@@ -43,6 +45,8 @@ const TournamentDetailsCard = ({
   insufficientFunds,
   navigate,
   participants,
+  disableJoinButton,
+  disableReason,
 }: TournamentDetailsCardProps) => {
   // Check if current user is a participant
   const isParticipant = participants.some(
@@ -87,6 +91,8 @@ const TournamentDetailsCard = ({
             status={tournament.status}
             getEntryFee={getEntryFee}
             navigate={navigate}
+            disableJoinButton={disableJoinButton}
+            disableReason={disableReason}
           />
         </div>
       </div>

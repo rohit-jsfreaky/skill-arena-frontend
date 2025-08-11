@@ -6,6 +6,7 @@ import {
   fetchTournamentsProps,
   joinTournamentProps,
   Tournament,
+  SlotBasedTournamentFormData,
 } from "@/interface/tournament";
 import api from "@/utils/api";
 import apiClient from "@/utils/apiClient";
@@ -271,5 +272,68 @@ export const getUserTournamentFinancials = async (userId: number) => {
   } catch (error) {
     console.log("Error fetching tournament financials:", error);
     return { success: false, data: [] };
+  }
+};
+
+// New slot-based tournament API functions
+export const createSlotBasedTournament = async (formData: SlotBasedTournamentFormData) => {
+  try {
+    const res = await api.post(
+      `api/admin/tournaments/create-slot-tournament?admin=true`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return { success: true, data: res.data, message: "Slot-based tournament created successfully" };
+  } catch (err: unknown) {
+    console.log(err);
+    if (axios.isAxiosError(err) && err.response) {
+      return {
+        success: false,
+        message: err.response.data?.message || "Failed to create tournament",
+      };
+    } else {
+      return { success: false, message: "Failed to create tournament" };
+    }
+  }
+};
+
+export const getTournamentGroups = async (tournamentId: string, userId: string) => {
+  try {
+    const { data } = await apiClient.get(`api/tournaments/${tournamentId}/groups`, {
+      params: { user_id: userId }
+    });
+    return data;
+  } catch (error) {
+    console.error("Error fetching tournament groups:", error);
+    throw error;
+  }
+};
+
+export const joinTournamentGroup = async (tournamentId: string, groupId: number, userId: string) => {
+  try {
+    const { data } = await apiClient.post(`api/tournaments/${tournamentId}/groups/join`, {
+      groupId,
+      user_id: userId
+    });
+    return data;
+  } catch (error) {
+    console.error("Error joining tournament group:", error);
+    throw error;
+  }
+};
+
+export const leaveTournamentGroup = async (tournamentId: string, userId: string) => {
+  try {
+    const { data } = await apiClient.delete(`api/tournaments/${tournamentId}/groups/leave`, {
+      params: { user_id: userId }
+    });
+    return data;
+  } catch (error) {
+    console.error("Error leaving tournament group:", error);
+    throw error;
   }
 };

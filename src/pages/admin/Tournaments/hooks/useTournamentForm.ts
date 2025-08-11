@@ -9,6 +9,9 @@ export interface TournamentFormState extends TournamentFormData {
   rules: string;
   room_id?: string | null;
   room_password?: string | null;
+  // Slot-based tournament fields
+  tournament_type?: 'regular' | 'slot-based';
+  max_groups?: number;
 }
 
 export const useTournamentForm = (initialData?: Partial<TournamentFormState>) => {
@@ -31,6 +34,9 @@ export const useTournamentForm = (initialData?: Partial<TournamentFormState>) =>
     prize_pool: 0,
     rules: "",
     youtube_live_url: "",
+    // Slot-based fields
+    tournament_type: "regular",
+    max_groups: 10,
     ...initialData
   });
 
@@ -44,11 +50,29 @@ export const useTournamentForm = (initialData?: Partial<TournamentFormState>) =>
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: ["entry_fee_normal", "entry_fee_pro", "max_participants", "prize_pool"].includes(name)
-        ? parseFloat(value)
-        : value,
+    setFormData((prev) => {
+      const newFormData = {
+        ...prev,
+        [name]: ["entry_fee_normal", "entry_fee_pro", "max_participants", "prize_pool", "max_groups"].includes(name)
+          ? parseFloat(value) || 0
+          : value,
+      };
+
+      // Auto-calculate max_participants for slot-based tournaments
+      if (newFormData.tournament_type === 'slot-based' && (name === 'team_mode' || name === 'max_groups')) {
+        const slotsPerGroupMap = {
+          'solo': 1,
+          'duo': 2,
+          '4v4': 4,
+          '6v6': 6,
+          '8v8': 8
+        } as const;
+        
+        const slotsPerGroup = slotsPerGroupMap[newFormData.team_mode as keyof typeof slotsPerGroupMap] || 1;
+        newFormData.max_participants = (newFormData.max_groups || 1) * slotsPerGroup;
+      }
+
+      return newFormData;
     });
   };
 

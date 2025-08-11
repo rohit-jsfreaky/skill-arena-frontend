@@ -9,6 +9,7 @@ import { useAuthToken } from "@/context/AuthTokenContext";
 import { useUser } from "@clerk/clerk-react";
 import NotLoginCard from "@/components/my-ui/NotLoginCard";
 import TournamentDetailsCard from "@/components/Tournaments/TournamentDetails";
+import SlotBasedTournamentJoin from "@/components/Tournaments/SlotBasedTournamentJoin";
 import { Button } from "@/components/ui/button";
 
 
@@ -46,7 +47,7 @@ const TournamentDetails: React.FC = () => {
         authToken,
       });
     }
-  }, [id, myUser]);
+  }, [id, myUser, authToken]);
 
   const onJoinTournament = () => {
     if (authToken) {
@@ -112,6 +113,9 @@ const TournamentDetails: React.FC = () => {
     myUser.wallet !== null &&
     Number(myUser.wallet) < Number(getEntryFee());
 
+  // Check if this is a slot-based tournament
+  const isSlotBasedTournament = Boolean(tournament.tournament_mode && tournament.max_groups);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <button
@@ -133,11 +137,30 @@ const TournamentDetails: React.FC = () => {
         joining={joining}
         myUser={myUser}
         navigate={navigate}
-        onJoinTournament={onJoinTournament}
+        onJoinTournament={isSlotBasedTournament ? undefined : onJoinTournament}
+        disableJoinButton={isSlotBasedTournament}
+        disableReason={"Select a group below to join"}
         participants={participants}
         success={success}
         tournament={tournament}
       />
+
+      {/* Slot-based tournament join section */}
+  {isSlotBasedTournament && myUser && tournament.status === "upcoming" && (
+        <div className="mt-6">
+          <SlotBasedTournamentJoin
+            tournamentId={id!}
+            tournamentName={tournament.name}
+            entryFee={getEntryFee()}
+            userWallet={Number(myUser.wallet || 0)}
+    userId={String(myUser.id)}
+            onJoinSuccess={() => {
+              setHasJoined(true);
+              setSuccess("Successfully joined tournament!");
+            }}
+          />
+        </div>
+      )}
 
       {tournament.status === 'completed' && (
         <Link to={`/tournaments/${tournament.id}/results`}>
