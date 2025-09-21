@@ -206,16 +206,21 @@ export const fetchTournaments = async ({
   page = 1,
   limit = 9,
   user_id,
+  game_name,
 }: fetchTournamentsProps) => {
   try {
-    const { data } = await apiClient.get(
-      `api/tournaments?page=${page}&limit=${limit}&user_id=${user_id}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    let url = `api/tournaments?page=${page}&limit=${limit}&user_id=${user_id}`;
+    
+    // Add game filter if specified
+    if (game_name && game_name !== "all") {
+      url += `&game_name=${encodeURIComponent(game_name)}`;
+    }
+
+    const { data } = await apiClient.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     console.log("Fetched tournaments:", data.data);
     setTournaments(data.data);
     return data.pagination;

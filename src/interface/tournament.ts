@@ -146,6 +146,7 @@ export interface fetchTournamentsProps {
   page?: number;
   limit?: number;
   user_id?: number;
+  game_name?: string;
 }
 
 export interface fetchMyTournamentsProps {
