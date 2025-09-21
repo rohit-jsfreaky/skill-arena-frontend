@@ -68,7 +68,10 @@ const TournamentResults = () => {
               })}
             </p>
           </div>
-          <ShareButton tournament={tournament} />
+          {/* Only show share button if user has submitted a screenshot */}
+          {userScreenshot && (
+            <ShareButton tournament={tournament} userScreenshot={userScreenshot} />
+          )}
         </div>
       </div>
 
