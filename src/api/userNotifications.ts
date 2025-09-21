@@ -47,6 +47,33 @@ export const getUserNotifications = async (
 };
 
 /**
+ * Get recent tournament completion notifications for a user
+ */
+export const getRecentTournamentCompletions = async (
+  user_id: number
+): Promise<NotificationResponse> => {
+  try {
+    const response = await apiClient.get(
+      `api/notifications/recent-tournament-completions?user_id=${user_id}`
+    );
+    
+    return {
+      success: true,
+      data: response.data.data
+    };
+  } catch (error: any) {
+    console.error("Failed to fetch recent tournament completions:", error);
+    return {
+      success: false,
+      message:
+        error.response?.data?.message ||
+        "Failed to fetch recent tournament completions",
+      data: []
+    };
+  }
+};
+
+/**
  * Mark a specific notification as read
  */
 export const markNotificationAsRead = async (

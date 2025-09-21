@@ -4,6 +4,7 @@ import GamesCard from "@/components/Home/GamesCard";
 import GamesCarousel from "@/components/Home/GamesCarousel";
 import Hero from "@/components/Home/Hero";
 import Working from "@/components/Home/Working";
+import HomeTournamentNotifications from "@/components/Home/HomeTournamentNotifications";
 
 const Home = () => {
   const GamesSliderImages = [
@@ -54,6 +55,9 @@ const Home = () => {
       className="bg-gradient-to-r from-black via-black to-[#BBF429] text-white min-h-screen"
       style={{ minHeight: "calc(100vh - 108px)" }}
     >
+      {/* Tournament Completion Notifications */}
+      <HomeTournamentNotifications />
+      
       <Hero />
 
       <div className="flex gap-5 justify-center py-20 cursor-pointer flex-wrap px-10 md:px-28">
