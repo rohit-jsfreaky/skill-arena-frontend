@@ -35,7 +35,7 @@ export const useTournamentForm = (initialData?: Partial<TournamentFormState>) =>
     rules: "",
     youtube_live_url: "",
     // Slot-based fields
-    tournament_type: "regular",
+    tournament_type: "slot-based",
     max_groups: 10,
     ...initialData
   });

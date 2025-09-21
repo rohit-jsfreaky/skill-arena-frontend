@@ -154,6 +154,7 @@ const Navbar = () => {
         isOpen={isOpen}
         drawerRef={drawerRef}
         drawerVariants={drawerVariants}
+        setIsOpen={setIsOpen}
       />
 
       <LogoutAlert

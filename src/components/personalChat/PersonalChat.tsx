@@ -250,12 +250,12 @@ const PersonalChat: React.FC<PersonalChatProps> = ({ currentUser }) => {
                   {" "}
                   {/* Change to flex-col and items-start */}
                   <div className="md:w-10 md:h-10 w-5 h-5 rounded-full bg-[#BBF429] flex items-center justify-center text-white font-semibold">
-                    {user.username.charAt(0).toUpperCase()}
+                    {user.username?.charAt(0).toUpperCase() || "U"}
                   </div>
                   <span className="ml-0 text-white mt-2 font-medium w-[50vw] md:w-48 text-xs md:text-sm break-words">
                     {" "}
                     {/* Remove ml-3, add mt-2 and break-words */}
-                    {user.username}
+                    {user.username || "Unknown User"}
                   </span>
                 </div>
                 {unreadCounts[user.id] > 0 && (
@@ -276,11 +276,11 @@ const PersonalChat: React.FC<PersonalChatProps> = ({ currentUser }) => {
             <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-black via-black to-[#BBF429] flex items-center justify-between">
               <div className="flex items-center">
                 <div className="w-10 h-10 rounded-full bg-[#BBF429] flex items-center justify-center text-white font-semibold">
-                  {selectedUser.username.charAt(0).toUpperCase()}
+                  {selectedUser.username?.charAt(0).toUpperCase() || "U"}
                 </div>
                 <div className="ml-3">
                   <h3 className="font-semibold text-xs md:text-sm  text-white">
-                    {selectedUser.username}
+                    {selectedUser.username || "Unknown User"}
                   </h3>
                   {typing[selectedUser.id] && (
                     <div className="text-sm text-gray-500">typing...</div>

@@ -83,12 +83,12 @@ const CreateTournament: React.FC = () => {
               >
                 {loading ? (
                   <div className="flex items-center justify-center gap-2">
-                    <div className="animate-spin h-4 w-4 border-2 border-black border-t-transparent rounded-full" />
-                    <span>Creating...</span>
+                    <div className="animate-spin h-5 w-5 border-2 border-black/30 border-t-black rounded-full" />
+                    <span>Creating Tournament...</span>
                   </div>
                 ) : uploading ? (
                   <div className="flex items-center justify-center gap-2">
-                    <div className="animate-spin h-4 w-4 border-2 border-black border-t-transparent rounded-full" />
+                    <div className="animate-spin h-5 w-5 border-2 border-black/30 border-t-black rounded-full" />
                     <span>Uploading Image...</span>
                   </div>
                 ) : (

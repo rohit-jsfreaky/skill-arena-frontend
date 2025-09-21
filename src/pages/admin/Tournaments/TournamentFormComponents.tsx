@@ -12,7 +12,6 @@ import TournamentRules from "@/components/admin/Tournaments/TournamentRules";
 import TournamentImage from "@/components/admin/Tournaments/TournamentImage";
 import TournamentRoom from "@/components/admin/Tournaments/TournamentRoom";
 import TournamentYoutubeLiveUrl from "@/components/admin/Tournaments/TournamentYoutubeLiveUrl";
-import TournamentType from "@/components/admin/Tournaments/TournamentType";
 import TournamentMaxGroups from "@/components/admin/Tournaments/TournamentMaxGroups";
 import { TournamentFormState } from './hooks/useTournamentForm';
 
@@ -45,10 +44,6 @@ export const TournamentFormComponents: React.FC<TournamentFormComponentsProps> =
 
       <FormSection title="Tournament Settings">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <TournamentType
-            tournament_type={formData.tournament_type || "regular"}
-            handleChange={handleChange}
-          />
           <TournamentTeamMode handleChange={handleChange} team_mode={formData.team_mode} />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
@@ -56,7 +51,7 @@ export const TournamentFormComponents: React.FC<TournamentFormComponentsProps> =
           <TournamentMaxGroups
             max_groups={formData.max_groups || 10}
             handleChange={handleChange}
-            tournament_type={formData.tournament_type || "regular"}
+            tournament_type="slot-based"
             team_mode={formData.team_mode}
           />
           <TournamentParticipants 
