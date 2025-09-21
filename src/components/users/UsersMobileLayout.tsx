@@ -105,11 +105,11 @@ const UsersMobileLayout = ({
                 />
               ) : (
                 <div className="h-10 w-10 rounded-full mr-3 bg-gray-600 flex items-center justify-center text-white">
-                  {user.username.charAt(0).toUpperCase()}
+                  {user.username ? user.username.charAt(0).toUpperCase() : "?"}
                 </div>
               )}
               <div>
-                <h3 className="font-medium text-lg">{user.username}</h3>
+                <h3 className="font-medium text-lg">{user.username || "Unknown"}</h3>
                 {user.is_banned ? (
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                     Banned
@@ -145,7 +145,7 @@ const UsersMobileLayout = ({
               </Button>
               
               <Button
-                onClick={() => handleBanClick(user.id, user.username, user.is_banned)}
+                onClick={() => handleBanClick(user.id, user.username || "Unknown", user.is_banned)}
                 variant={user.is_banned ? "default" : "secondary"}
                 size="sm"
                 className={user.is_banned ? "bg-green-600 hover:bg-green-700" : "bg-yellow-600 hover:bg-yellow-700"}

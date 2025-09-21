@@ -52,7 +52,7 @@ export const WinnerSelectionDialog = ({
         <div className="py-4">
           <p className="mb-4">
             You are about to award the prize of{" "}
-            <span className="font-bold text-[#BBF429]">${match.prize_pool}</span> to:
+            <span className="font-bold text-[#BBF429]">₹{match.prize_pool}</span> to:
           </p>
 
           {selectedTeamId && selectedTeam && (

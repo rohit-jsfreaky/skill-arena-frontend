@@ -52,7 +52,7 @@ const TournamentInfo: React.FC<TournamentInfoProps> = ({
           />
           <InfoItem
             label="Prize Pool"
-            value={`$${tournament.prize_pool}`}
+            value={`₹${tournament.prize_pool}`}
             icon={<TrophyIcon className="w-5 h-5" />}
           />
           <InfoItem
@@ -94,8 +94,8 @@ const TournamentInfo: React.FC<TournamentInfoProps> = ({
                   </span>
                 ) : (
                   <>
-                    <div>Normal: ${tournament.entry_fee_normal}</div>
-                    <div>Pro: ${tournament.entry_fee_pro}</div>
+                    <div>Normal: ₹{tournament.entry_fee_normal}</div>
+                    <div>Pro: ₹{tournament.entry_fee_pro}</div>
                   </>
                 )}
               </>

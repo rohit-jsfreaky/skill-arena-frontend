@@ -48,7 +48,7 @@ export const ConfirmationDialog = ({
         <div className="py-4">
           <p className="mb-4">
             You are about to award the prize of{" "}
-            <span className="font-bold">${tournament.prize_pool}</span> to:
+            <span className="font-bold">₹{tournament.prize_pool}</span> to:
           </p>
 
           {selectedWinnerId && selectedScreenshot && (

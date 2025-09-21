@@ -54,7 +54,7 @@ const TournamentHistory = ({ userId }: TournamentHistoryProps) => {
     tournament.status === 'completed' ? (
       tournament.is_winner ? (
         <span className="text-green-400 font-bold text-sm">
-          Won ${tournament.winnings}
+          Won ₹{tournament.winnings}
         </span>
       ) : (
         <span className="text-red-400">Lost</span>
@@ -108,7 +108,7 @@ const TournamentHistory = ({ userId }: TournamentHistoryProps) => {
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-400">Entry Fee:</span>
-                <span className="text-white">${tournament.entry_fee}</span>
+                <span className="text-white">₹{tournament.entry_fee}</span>
               </div>
               
               <div className="flex justify-between items-center text-sm">
@@ -156,7 +156,7 @@ const TournamentHistory = ({ userId }: TournamentHistoryProps) => {
                   </div>
                 </td>
                 <td className="p-2 text-center">{formatDate(tournament.start_time)}</td>
-                <td className="p-2 text-center">${tournament.entry_fee}</td>
+                <td className="p-2 text-center">₹{tournament.entry_fee}</td>
                 <td className="p-2 text-center">{renderStatus(tournament.status)}</td>
                 <td className="p-2 text-center">{renderResult(tournament)}</td>
               </tr>

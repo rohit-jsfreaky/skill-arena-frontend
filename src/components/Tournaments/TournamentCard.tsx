@@ -77,7 +77,7 @@ const TournamentCard: React.FC<TournamentCardProps> = ({
 
         <div className="mb-1">
           <p className="text-gray-400">
-            Entry Fee: ${getEntryFee(tournament)}
+            Entry Fee: ₹{getEntryFee(tournament)}
             {myUser?.membership_id && (
               <span className="ml-1 sm:ml-2 text-green-400 text-xs sm:text-sm">
                 (Pro Price)

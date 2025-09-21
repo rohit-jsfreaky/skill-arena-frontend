@@ -301,7 +301,7 @@ const AdminTdmMatchesPage = () => {
     {
       key: "prize_pool",
       label: "Prize Pool",
-      render: (match) => `$${match.prize_pool}`,
+      render: (match) => `₹${match.prize_pool}`,
     },
     {
       key: "created_at",
@@ -486,7 +486,7 @@ const AdminTdmMatchesPage = () => {
                         <div className="grid grid-cols-2 gap-y-2 text-sm">
                           <div className="text-gray-400">Prize Pool:</div>
                           <div className="text-[#BBF429] font-medium">
-                            ${match.prize_pool}
+                            ₹{match.prize_pool}
                           </div>
 
                           <div className="text-gray-400">Team A:</div>

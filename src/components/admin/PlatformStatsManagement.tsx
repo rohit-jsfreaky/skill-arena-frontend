@@ -137,7 +137,7 @@ const PlatformStatsManagement: React.FC = () => {
   const formatValue = (value: number, formatType: string) => {
     switch (formatType) {
       case 'currency':
-        return `$${value.toLocaleString()}`;
+        return `₹${value.toLocaleString()}`;
       case 'percentage':
         return `${value}%`;
       default:

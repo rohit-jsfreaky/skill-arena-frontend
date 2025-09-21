@@ -44,12 +44,12 @@ export const MatchDetailsPanel = ({ match }: MatchDetailsPanelProps) => {
         
         <div className="flex justify-between">
           <span className="text-gray-300">Entry Fee:</span>
-          <span className="text-white font-medium">${match.entry_fee}</span>
+          <span className="text-white font-medium">₹{match.entry_fee}</span>
         </div>
         
         <div className="flex justify-between">
           <span className="text-gray-300">Prize Pool:</span>
-          <span className="text-[#BBF429] font-medium">${match.prize_pool}</span>
+          <span className="text-[#BBF429] font-medium">₹{match.prize_pool}</span>
         </div>
         
         <div className="flex justify-between">

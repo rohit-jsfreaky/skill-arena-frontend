@@ -117,11 +117,11 @@ const UsersLargeView = ({
             />
           ) : (
             <div className="h-10 w-10 rounded-full mr-3 bg-gray-600 flex items-center justify-center">
-              {user.username.charAt(0).toUpperCase()}
+              {user.username ? user.username.charAt(0).toUpperCase() : "?"}
             </div>
           )}
           <div>
-            <div className="font-medium">{user.username}</div>
+            <div className="font-medium">{user.username || "Unknown"}</div>
             <div className="text-sm text-gray-400">{user.name || "N/A"}</div>
           </div>
         </div>

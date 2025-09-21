@@ -94,7 +94,7 @@ const TournamentFinancials = ({ userId }: TournamentFinancialsProps) => {
               ? "text-red-400"
               : "text-green-400"
           }`}>
-            {item.transaction_type === "entry_fee" ? "-" : "+"}$
+            {item.transaction_type === "entry_fee" ? "-" : "+"}₹
             {Number(item.amount).toFixed(2)}
           </div>
         </div>
@@ -141,7 +141,7 @@ const TournamentFinancials = ({ userId }: TournamentFinancialsProps) => {
                     : "text-green-400"
                 }`}
               >
-                {item.transaction_type === "entry_fee" ? "-" : "+"}$
+                {item.transaction_type === "entry_fee" ? "-" : "+"}₹
                 {Number(item.amount).toFixed(2)}
               </td>
             </tr>
@@ -161,13 +161,13 @@ const TournamentFinancials = ({ userId }: TournamentFinancialsProps) => {
         <div className="bg-black/30 border border-[#BBF429]/30 rounded-lg p-4">
           <h3 className="text-sm text-gray-400 mb-1">Total Spent</h3>
           <p className="text-xl font-bold text-red-400">
-            -${totalSpent.toFixed(2)}
+            -₹{totalSpent.toFixed(2)}
           </p>
         </div>
         <div className="bg-black/30 border border-[#BBF429]/30 rounded-lg p-4">
           <h3 className="text-sm text-gray-400 mb-1">Total Won</h3>
           <p className="text-xl font-bold text-green-400">
-            +${totalWon.toFixed(2)}
+            +₹{totalWon.toFixed(2)}
           </p>
         </div>
         <div className="bg-black/30 border border-[#BBF429]/30 rounded-lg p-4">
@@ -177,7 +177,7 @@ const TournamentFinancials = ({ userId }: TournamentFinancialsProps) => {
               totalWon - totalSpent >= 0 ? "text-green-400" : "text-red-400"
             }`}
           >
-            ${(totalWon - totalSpent).toFixed(2)}
+            ₹{(totalWon - totalSpent).toFixed(2)}
           </p>
         </div>
       </div>

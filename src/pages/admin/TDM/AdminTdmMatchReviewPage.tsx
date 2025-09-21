@@ -80,7 +80,7 @@ const AdminTdmMatchReviewPage = () => {
             <div className="flex items-center mb-2">
               <Trophy className="h-5 w-5 text-amber-500 mr-2" />
               <span className="font-medium text-white">
-                Prize Pool: ${match.prize_pool}
+                Prize Pool: ₹{match.prize_pool}
               </span>
             </div>
 

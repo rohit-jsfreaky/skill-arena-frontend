@@ -106,7 +106,7 @@ const AdminTournamentResults = () => {
                     <div className="flex justify-between text-sm">
                       <span className="text-[#eaffa9]">Prize Pool:</span>
                       <span className="font-semibold text-[#eaffa9]">
-                        ${tournament.prize_pool}
+                        ₹{tournament.prize_pool}
                       </span>
                     </div>
 
