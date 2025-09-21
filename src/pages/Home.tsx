@@ -5,54 +5,73 @@ import GamesCarousel from "@/components/Home/GamesCarousel";
 import Hero from "@/components/Home/Hero";
 import Working from "@/components/Home/Working";
 import HomeTournamentNotifications from "@/components/Home/HomeTournamentNotifications";
+import { 
+  banner_1, 
+  banner_2, 
+  banner_3, 
+  banner_4,
+  bgmi,
+  coc,
+  cod,
+  ff,
+  valo,
+  play,
+  top_up,
+  win_a_match,
+   withdraw_money
+} from "@/constants/images";
 
 const Home = () => {
+  // GamesSliderImages - using local game images repeated for carousel effect
   const GamesSliderImages = [
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FmodernWarfare.4ffc72db.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fvalorant.49a8ef58.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FdotA.a9250df1.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffortnite.c428b7a6.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FmodernWarfare.4ffc72db.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fvalorant.49a8ef58.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FdotA.a9250df1.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffortnite.c428b7a6.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FmodernWarfare.4ffc72db.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fvalorant.49a8ef58.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FdotA.a9250df1.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffortnite.c428b7a6.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FmodernWarfare.4ffc72db.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fvalorant.49a8ef58.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FdotA.a9250df1.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffortnite.c428b7a6.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FmodernWarfare.4ffc72db.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fvalorant.49a8ef58.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FdotA.a9250df1.png&w=384&q=30",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffortnite.c428b7a6.png&w=384&q=30",
+    bgmi,
+    valo,
+    cod,
+    ff,
+    coc,
+    bgmi,
+    valo,
+    cod,
+    ff,
+    coc,
+    bgmi,
+    valo,
+    cod,
+    ff,
+    coc,
+    bgmi,
+    valo,
+    cod,
+    ff,
+    coc,
   ];
 
+  // GamesCard images - using local images from images.ts
   const games = [
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ffortnite.3e303bd8.png&w=256&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fvalorant.14c41295.png&w=256&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fcs2.903e23bf.png&w=256&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fpubg.650281fd.png&w=256&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FmodernWarfare.88df12ea.png&w=256&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FcallOfDuty.c3363329.png&w=256&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Feafc.1b12745c.png&w=256&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Feafc25.51f04def.png&w=256&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FrocketLeague.2c70621b.png&w=256&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdota.6f77c490.png&w=256&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FfallGuys.98b8e2d3.png&w=256&q=50",
+    bgmi,
+    coc,
+    cod,
+    ff,
+    valo,
   ];
 
+  // BannerSlider images - using local banner images from images.ts
   const images = [
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F4.214a5f5a.png&w=3840&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F3.0248ec63.png&w=3840&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F1.5d0ba067.png&w=3840&q=50",
-    "https://www.duelmasters.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F2.438195eb.png&w=3840&q=50",
+    banner_1,
+    banner_2,
+    banner_3,
+    banner_4,
+  ];
+
+  const workingImages = [
+    play,
+    top_up,
+    win_a_match,
+    withdraw_money
   ];
   return (
     <div
-      className="bg-gradient-to-r from-black via-black to-[#BBF429] text-white min-h-screen"
+      className="bg-black text-white min-h-screen"
       style={{ minHeight: "calc(100vh - 108px)" }}
     >
       {/* Tournament Completion Notifications */}
@@ -71,7 +90,7 @@ const Home = () => {
       </div>
 
       <div className=" py-10 px-10 md:px-28">
-        <Working />
+        <Working workingImages={workingImages}/>
       </div>
 
       <div className=" py-10 px-10 md:px-28">

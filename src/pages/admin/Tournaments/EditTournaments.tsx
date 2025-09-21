@@ -13,7 +13,7 @@ const EditTournament = () => {
 
   if (!tournament) {
     return (
-      <div className="w-full h-full flex flex-col justify-center items-center bg-gradient-to-r from-black via-black to-[#BBF429] p-8">
+      <div className="w-full h-full flex flex-col justify-center items-center bg-black p-8">
         <div className="bg-[#1A1A1A] rounded-lg shadow-lg p-8 text-center">
           <h1 className="text-2xl font-bold text-[#BBF429] mb-4">
             No Tournament Found
@@ -46,7 +46,7 @@ const EditTournament = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-black via-black to-[#BBF429]">
+    <div className="min-h-screen bg-black">
       <div className="container mx-auto px-4 py-14">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-8">
           <div>

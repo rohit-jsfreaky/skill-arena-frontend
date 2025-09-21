@@ -105,7 +105,7 @@ const UserLeaderboardStats: React.FC = () => {
 
   if (loading) {
     return (
-      <Card className="bg-gradient-to-r from-black via-black to-[#BBF429]/10 border-[#BBF429] text-white mx-4 md:mx-10 my-4">
+      <Card className="bg-black/10 border-[#BBF429] text-white mx-4 md:mx-10 my-4">
         <CardContent className="p-4 sm:p-6">
           <div className="flex justify-center items-center py-6 sm:py-8">
             <div className="animate-pulse flex flex-col items-center">
@@ -120,7 +120,7 @@ const UserLeaderboardStats: React.FC = () => {
 
   if (requiresUpgrade) {
     return (
-      <Card className="bg-gradient-to-r from-black via-black to-[#BBF429]/10 border-[#BBF429] text-white mx-4 md:mx-10 my-4">
+      <Card className="bg-black/10 border-[#BBF429] text-white mx-4 md:mx-10 my-4">
         <CardHeader className="p-4 sm:p-6">
           <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-500" />
@@ -149,7 +149,7 @@ const UserLeaderboardStats: React.FC = () => {
 
   if (error || !stats) {
     return (
-      <Card className="bg-gradient-to-r from-black via-black to-[#BBF429]/10 border-[#BBF429] text-white mx-4 md:mx-10 my-4">
+      <Card className="bg-black/10 border-[#BBF429] text-white mx-4 md:mx-10 my-4">
         <CardContent className="p-4 sm:p-6">
           <div className="text-center py-6 sm:py-8">
             <p className="text-red-400">
@@ -189,7 +189,7 @@ const UserLeaderboardStats: React.FC = () => {
   };
 
   return (
-    <Card className="bg-gradient-to-r from-black via-black to-[#BBF429]/10 border-[#BBF429] text-white mx-4 md:mx-10 my-4">
+    <Card className="bg-black/10 border-[#BBF429] text-white mx-4 md:mx-10 my-4">
       <CardHeader className="p-4 sm:p-6">
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-lg sm:text-xl">

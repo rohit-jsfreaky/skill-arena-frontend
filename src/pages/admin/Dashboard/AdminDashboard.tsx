@@ -86,7 +86,7 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="w-full h-full flex-col relative bg-gradient-to-r from-black via-black to-[#BBF429] p-4 pt-14 md:p-8 md:pt-14">
+    <div className="w-full h-full flex-col relative bg-black p-4 pt-14 md:p-8 md:pt-14">
       {/* Header with title and profile dropdown */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-white">Dashboard</h1>

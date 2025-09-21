@@ -37,7 +37,7 @@ const ProfileSecond = () => {
       <div
         className={`${
           !isSignedIn && "justify-center flex items-center"
-        } bg-gradient-to-r from-black via-black to-[#BBF429] text-white min-h-screen`}
+        } bg-black text-white min-h-screen`}
         style={{ minHeight: "calc(100vh - 108px)" }}
       >
         <NotLoginCard />
@@ -116,7 +116,7 @@ const ProfileSecond = () => {
       <>
         <ProfileHeader />
 
-        <div className="flex border border-white rounded-2xl h-[80vh] relative bg-gradient-to-r from-black via-black to-[#BBF429] overflow-x-hidden">
+        <div className="flex border border-white rounded-2xl h-[80vh] relative bg-black overflow-x-hidden">
           <SiderBar
             isMobileMenuOpen={isMobileMenuOpen}
             selectedOption={selectedOption}

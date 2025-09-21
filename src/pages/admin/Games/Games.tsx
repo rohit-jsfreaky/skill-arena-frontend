@@ -74,7 +74,7 @@ const Games: React.FC = () => {
     console.log("games", games);
   }, [games]);
   return (
-    <div className="h-full w-full px-4 py-14 bg-gradient-to-r from-black via-black to-[#BBF429]">
+    <div className="h-full w-full px-4 py-14 bg-black">
       <div className="container mx-auto">
         <GameHeader
           searchTerm={searchTerm}

@@ -51,7 +51,7 @@ const TransactionsPage: React.FC = () => {
   const hasActiveFilters = !!(statusFilter || searchQuery || startDate || endDate);
 
   return (
-    <div className="w-full h-full flex flex-col bg-gradient-to-r from-black via-black to-[#BBF429] p-2 pt-14 md:p-8 md:pt-14">
+    <div className="w-full h-full flex flex-col bg-black p-2 pt-14 md:p-8 md:pt-14">
       <TransactionHeader 
         onRefresh={fetchTransactions}
         searchQuery={searchQuery}

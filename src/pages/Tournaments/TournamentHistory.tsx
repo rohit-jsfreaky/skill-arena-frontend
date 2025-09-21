@@ -27,7 +27,7 @@ const TournamentHistory: React.FC = () => {
       <div
         className={`${
           !isSignedIn && "justify-center flex items-center"
-        } bg-gradient-to-r from-black via-black to-[#BBF429] text-white min-h-screen`}
+        } bg-black text-white min-h-screen`}
         style={{ minHeight: "calc(100vh - 108px)" }}
       >
         <NotLoginCard />

@@ -24,7 +24,7 @@ const CreateTournament: React.FC = () => {
   },[formData])
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-black via-black to-[#BBF429]">
+    <div className="min-h-screen bg-black">
       <div className="container mx-auto px-4 py-14">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-8">
           <div>

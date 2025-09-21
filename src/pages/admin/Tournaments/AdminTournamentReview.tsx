@@ -53,7 +53,7 @@ const AdminTournamentReview = () => {
   }
 
   return (
-    <div className="w-full h-full flex-col gap-40 pt-15 bg-gradient-to-r from-black via-black to-[#BBF429] p-4">
+    <div className="w-full h-full flex-col gap-40 pt-15 bg-black p-4">
       <div className="container mx-auto px-4 py-8">
         <Button
           variant="default"

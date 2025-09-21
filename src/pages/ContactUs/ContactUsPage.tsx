@@ -22,7 +22,7 @@ const ContactUsPage = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-r from-black via-black to-[#BBF429] min-h-screen py-5">
+    <div className="bg-black min-h-screen py-5">
       <div className=" mx-auto px-4">
         {loading ? (
           <div className="flex justify-center items-center h-64">

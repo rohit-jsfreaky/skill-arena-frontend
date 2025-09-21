@@ -35,7 +35,7 @@ const Tournament = () => {
 
   if (!tournament) {
     return (
-      <div className="flex justify-center items-center w-full h-full mx-auto px-4 py-14 bg-gradient-to-r from-black via-black to-[#BBF429]">
+      <div className="flex justify-center items-center w-full h-full mx-auto px-4 py-14 bg-black">
         <NotFoundTournament navigate={navigate} name="admin" />;
       </div>
     );
@@ -45,7 +45,7 @@ const Tournament = () => {
     <div
       className={`w-full flex flex-col ${
         loading ? "items-center justify-center" : "justify-start"
-      } h-full mx-auto px-4 py-14 bg-gradient-to-r from-black via-black to-[#BBF429]`}
+      } h-full mx-auto px-4 py-14 bg-black`}
     >
       {!loading && (
         <button

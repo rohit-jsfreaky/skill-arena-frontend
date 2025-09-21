@@ -34,7 +34,7 @@ const AdminTournaments: React.FC = () => {
   } = useAdminTournaments();
 
   return (
-    <div className="w-full h-full flex-col gap-40 pt-15 bg-gradient-to-r from-black via-black to-[#BBF429] p-4">
+    <div className="w-full h-full flex-col gap-40 pt-15 bg-black p-4">
       <TournamentHeader
         searchTerm={searchTerm}
         searchResults={searchResults}

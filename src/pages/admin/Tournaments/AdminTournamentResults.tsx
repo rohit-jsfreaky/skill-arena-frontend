@@ -51,7 +51,7 @@ const AdminTournamentResults = () => {
   }
 
   return (
-    <div className="w-full h-full flex-col gap-40 pt-15 bg-gradient-to-r from-black via-black to-[#BBF429] p-4">
+    <div className="w-full h-full flex-col gap-40 pt-15 bg-black p-4">
       <div className="container mx-auto p-6 text-white">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold  sm:text-left mb-4 sm:mb-0">

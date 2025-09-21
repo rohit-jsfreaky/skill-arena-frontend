@@ -15,14 +15,14 @@ const ChatPage = () => {
     }
   }, [myUser]);
 
-  const containerClasses = `bg-gradient-to-r from-black via-black to-[#BBF429] px-10 py-10 text-white min-h-screen `;
+  const containerClasses = `bg-black px-10 py-10 text-white min-h-screen `;
 
   if (!isSignedIn || !myUser) {
     return (
       <div
         className={`${
           !isSignedIn && "justify-center flex items-center"
-        } bg-gradient-to-r from-black via-black to-[#BBF429] text-white min-h-screen`}
+        } bg-black text-white min-h-screen`}
         style={{ minHeight: "calc(100vh - 108px)" }}
       >
         <NotLoginCard />

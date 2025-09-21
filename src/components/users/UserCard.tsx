@@ -45,7 +45,7 @@ type UserCardProps = {
 };
 const UserCard = ({ user, container, item, formatDate }: UserCardProps) => {
   return (
-    <div className="container mx-auto px-4 py-8 bg-gradient-to-r from-black via-black to-[#BBF429] min-h-screen">
+    <div className="container mx-auto px-4 py-8 bg-black min-h-screen">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}

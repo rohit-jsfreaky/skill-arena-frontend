@@ -187,7 +187,7 @@ const LeaderboardPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-r from-black via-black to-[#BBF429] text-white px-3 sm:px-6">
+    <div className="w-full min-h-screen bg-black text-white px-3 sm:px-6">
       <div className="container py-4 sm:py-8 max-w-6xl mx-auto">
         <div className="mb-4 sm:mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -215,7 +215,7 @@ const LeaderboardPage: React.FC = () => {
         {/* Platform Statistics Banner */}
         <PlatformStatsBanner />
 
-        <Card className="mb-4 sm:mb-6 bg-gradient-to-r from-black via-black to-[#BBF429]/10 border border-[#BBF429]">
+        <Card className="mb-4 sm:mb-6 bg-black/10 border border-[#BBF429]">
           <CardContent className="p-3 sm:p-6">
             <div className="flex flex-col sm:flex-row gap-3">
               <Tabs

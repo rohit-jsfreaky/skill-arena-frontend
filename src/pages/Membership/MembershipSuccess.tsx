@@ -23,7 +23,7 @@ const MembershipSuccess: React.FC = () => {
   }, [fetchUser, myUser, navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-black via-black to-[#BBF429]">
+    <div className="flex items-center justify-center min-h-screen bg-black">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}

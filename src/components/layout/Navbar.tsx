@@ -60,7 +60,7 @@ const Navbar = () => {
   const displayLetter = user?.firstName?.charAt(0) || getRandomLetter();
 
   return (
-    <nav className="flex top-0 items-center justify-between pt-2 bg-gradient-to-r from-black via-black to-[#BBF429] text-white">
+    <nav className="flex top-0 items-center justify-between pt-2 bg-black text-white">
       <NavbarLogo />
       <DesktopMenu />
       

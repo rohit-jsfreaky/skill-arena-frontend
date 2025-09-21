@@ -185,7 +185,7 @@ const Profile = () => {
     <div
       className={`${
         !isSignedIn && "justify-center flex min-h-screen items-center"
-      } bg-gradient-to-r from-black via-black to-[#BBF429] text-white min-h-screen py-8 px-6 sm:px-12 md:px-20 lg:px-40 xl:px-60`}
+      } bg-black text-white min-h-screen py-8 px-6 sm:px-12 md:px-20 lg:px-40 xl:px-60`}
       style={{ minHeight: "calc(100vh - 108px)" }}
     >
       {!isSignedIn ? (

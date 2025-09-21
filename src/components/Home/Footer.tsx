@@ -2,28 +2,48 @@ import { FaPaypal, FaBitcoin } from "react-icons/fa";
 import { BsCurrencyDollar } from "react-icons/bs";
 import { useNavigate } from "react-router";
 
-
 const Footer = () => {
   const navigate = useNavigate();
   return (
-    <footer className="bg-gradient-to-r pt-10 border-t-2 border-t-[#BBF429] from-black via-black to-[#BBF429] text-white px-6 lg:px-16 py-10">
-
+    <footer className=" pt-10 border-t-2 border-t-[#BBF429] bg-black text-white px-6 lg:px-16 py-10">
       {/* Links Section */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 text-sm text-[#EAFFA9] mt-8">
         <div>
           <h4 className="font-semibold text-[#BBF429]">COMPETITIONS</h4>
           <ul>
-            <li className="mt-2 cursor-pointer" onClick={()=>navigate("/")}>SKILL ARENA</li>
-            <li className="mt-2 cursor-pointer" onClick={()=>navigate("/tournaments")}>Tournaments</li>
-            <li className="mt-2 cursor-pointer" onClick={()=>navigate("/leaderboard")}>Leaderboard</li>
+            <li className="mt-2 cursor-pointer" onClick={() => navigate("/")}>
+              SKILL ARENA
+            </li>
+            <li
+              className="mt-2 cursor-pointer"
+              onClick={() => navigate("/tournaments")}
+            >
+              Tournaments
+            </li>
+            <li
+              className="mt-2 cursor-pointer"
+              onClick={() => navigate("/leaderboard")}
+            >
+              Leaderboard
+            </li>
           </ul>
         </div>
         <div>
           <h4 className="font-semibold text-[#BBF429]">SUPPORT</h4>
           <ul>
-            <li className="mt-2 cursor-pointer" onClick={()=>navigate("/contact")}>Contact Us</li>
+            <li
+              className="mt-2 cursor-pointer"
+              onClick={() => navigate("/contact")}
+            >
+              Contact Us
+            </li>
             <li className="mt-2">FAQ</li>
-            <li className="mt-2 cursor-pointer" onClick={()=>navigate("/about")}>About Us</li>
+            <li
+              className="mt-2 cursor-pointer"
+              onClick={() => navigate("/about")}
+            >
+              About Us
+            </li>
           </ul>
         </div>
         <div>
@@ -46,7 +66,9 @@ const Footer = () => {
           </ul>
         </div>
         <div>
-          <h4 className="font-semibold text-[#BBF429]">SAFE & SECURE PAYMENTS</h4>
+          <h4 className="font-semibold text-[#BBF429]">
+            SAFE & SECURE PAYMENTS
+          </h4>
           <div className="flex items-center space-x-3 mt-2">
             <FaPaypal size={28} />
             <FaBitcoin size={28} />
@@ -59,13 +81,14 @@ const Footer = () => {
       {/* Bottom Section */}
       <div className="mt-8 text-center text-xs text-gray-300">
         <p>
-          All content, game titles, trade names, and trademarks belong to their respective owners.
+          All content, game titles, trade names, and trademarks belong to their
+          respective owners.
         </p>
         <p className="mt-1">Over 18+ Only</p>
-        <p className="mt-4">© 2025 — SKILL ARENA Limited. All rights reserved</p>
+        <p className="mt-4">
+          © 2025 — SKILL ARENA Limited. All rights reserved
+        </p>
       </div>
-
-      
     </footer>
   );
 };

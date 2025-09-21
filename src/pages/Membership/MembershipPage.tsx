@@ -23,7 +23,7 @@ const MembershipPage: React.FC = () => {
   if (!isSignedIn) {
     return (
       <div
-        className="bg-gradient-to-r from-black via-black to-[#BBF429] text-white min-h-screen flex items-center justify-center"
+        className="bg-black text-white min-h-screen flex items-center justify-center"
         style={{ minHeight: "calc(100vh - 108px)" }}
       >
         <NotLoginCard />

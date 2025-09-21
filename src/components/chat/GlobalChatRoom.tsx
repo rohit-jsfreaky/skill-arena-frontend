@@ -136,12 +136,12 @@ const GlobalChatRoom: React.FC<GlobalChatRoomProps> = ({ user }) => {
   }
 
   return (
-    <div className="flex bg-gradient-to-r from-black via-black to-[#BBF429] flex-col h-[calc(100vh-160px)] md:h-96 border rounded-lg shadow-md max-w-2xl mx-auto w-full">
-      <div className="hidden md:block bg-gradient-to-r from-black via-black to-[#BBF429] text-white p-3 rounded-t-lg">
+    <div className="flex bg-black flex-col h-[calc(100vh-160px)] md:h-96 border rounded-lg shadow-md max-w-2xl mx-auto w-full">
+      <div className="hidden md:block bg-black text-white p-3 rounded-t-lg">
         <h2 className="text-xl font-semibold">Global Chat Room</h2>
       </div>
 
-      <div className="flex-1 messages-container p-4 overflow-y-auto bg-gradient-to-r from-black via-black to-[#BBF429]">
+      <div className="flex-1 messages-container p-4 overflow-y-auto bg-black">
         {messages.length === 0 ? (
           <div className="text-center text-gray-500 my-8">
             No messages yet. Be the first to say hello!
@@ -208,7 +208,7 @@ const GlobalChatRoom: React.FC<GlobalChatRoomProps> = ({ user }) => {
         />
         <button
           type="submit"
-          className="bg-gradient-to-r from-black via-black to-[#BBF429] text-white px-4 py-2 rounded-lg md:rounded-r-lg md:rounded-l-none hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="bg-black text-white px-4 py-2 rounded-lg md:rounded-r-lg md:rounded-l-none hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           disabled={!message.trim() || !user}
         >
           Send

@@ -104,7 +104,7 @@ const AdminPagesPage = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex-col gap-4 sm:gap-8 bg-gradient-to-r from-black via-black to-[#BBF429] p-3 sm:p-4">
+    <div className="w-full min-h-screen flex-col gap-4 sm:gap-8 bg-black p-3 sm:p-4">
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
         <h1 className="text-3xl font-bold text-white mb-6">Manage Pages</h1>
 

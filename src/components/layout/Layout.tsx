@@ -7,7 +7,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="flex-grow bg-gradient-to-r from-black via-black to-[#BBF429] pb-16 md:pb-0">
+      <div className="flex-grow bg-black pb-16 md:pb-0">
         {children}
       </div>
       <BottomTabs />

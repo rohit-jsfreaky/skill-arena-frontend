@@ -215,7 +215,7 @@ const PersonalChat: React.FC<PersonalChatProps> = ({ currentUser }) => {
   };
 
   return (
-    <div className="flex border border-white rounded-2xl h-[80vh] relative bg-gradient-to-r from-black via-black to-[#BBF429] overflow-x-hidden">
+    <div className="flex border border-white rounded-2xl h-[80vh] relative bg-black overflow-x-hidden">
       {/* Mobile menu button */}
       <button
         onClick={toggleMobileMenu}
@@ -273,7 +273,7 @@ const PersonalChat: React.FC<PersonalChatProps> = ({ currentUser }) => {
       <div className="flex-1 flex flex-col h-full">
         {selectedUser ? (
           <>
-            <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-black via-black to-[#BBF429] flex items-center justify-between">
+            <div className="p-4 border-b border-gray-200 bg-black flex items-center justify-between">
               <div className="flex items-center">
                 <div className="w-10 h-10 rounded-full bg-[#BBF429] flex items-center justify-center text-white font-semibold">
                   {selectedUser.username?.charAt(0).toUpperCase() || "U"}
@@ -289,7 +289,7 @@ const PersonalChat: React.FC<PersonalChatProps> = ({ currentUser }) => {
               </div>
             </div>
 
-            <div className="flex-1  px-7 xs:px-5 text-xs md:text-sm messages-container overflow-y-auto p-4 bg-gradient-to-r from-black via-black to-[#BBF429]">
+            <div className="flex-1  px-7 xs:px-5 text-xs md:text-sm messages-container overflow-y-auto p-4 bg-black">
               {conversations &&
                 conversations[selectedUser.id]?.map((msg) => (
                   <div
@@ -334,7 +334,7 @@ const PersonalChat: React.FC<PersonalChatProps> = ({ currentUser }) => {
             </div>
 
             <form
-              className="p-3 border-t border-gray-200 bg-gradient-to-r from-black via-black to-[#BBF429] flex items-center"
+              className="p-3 border-t border-gray-200 bg-black flex items-center"
               onSubmit={sendMessage}
             >
               <input
@@ -368,7 +368,7 @@ const PersonalChat: React.FC<PersonalChatProps> = ({ currentUser }) => {
             </form>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center bg-gradient-to-r from-black via-black to-[#BBF429]">
+          <div className="flex-1 flex items-center justify-center bg-black">
             <div className="text-center p-6 max-w-md">
               <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-[#BBF429]/20 flex items-center justify-center">
                 <svg

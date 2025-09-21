@@ -395,7 +395,7 @@ const AdminTdmMatchesPage = () => {
   ];
 
   return (
-    <div className="w-full h-full flex-col gap-40 pt-15 bg-gradient-to-r from-black via-black to-[#BBF429] p-4">
+    <div className="w-full h-full flex-col gap-40 pt-15 bg-black p-4">
       <div className="container mx-auto py-10">
         <Card className="bg-gradient-to-r from-black to-[#1A1A1A] border-[#BBF429] text-white">
           <CardHeader>

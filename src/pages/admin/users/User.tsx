@@ -39,7 +39,7 @@ const User = () => {
 
   if (loading) {
     return (
-      <div className="h-full w-full flex flex-col justify-center items-center bg-gradient-to-r from-black via-black to-[#BBF429]">
+      <div className="h-full w-full flex flex-col justify-center items-center bg-black">
         <LoadingSpinner color="white" size={70} />
       </div>
     );
@@ -66,7 +66,7 @@ const User = () => {
   };
 
   return (
-    <div className="w-full h-full bg-gradient-to-r from-black via-black to-[#BBF429] p-2 pt-14 md:p-8 md:pt-14">
+    <div className="w-full h-full bg-black p-2 pt-14 md:p-8 md:pt-14">
       <UserCard
         container={container}
         formatDate={formatDate}
