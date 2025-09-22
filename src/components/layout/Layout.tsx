@@ -1,5 +1,6 @@
 import Navbar from "./Navbar";
 import BottomTabs from "./BottomTabs";
+import FloatingWhatsAppButton from "../WhatsAppSupport/FloatingWhatsAppButton";
 
 import { ReactNode } from "react";
 
@@ -11,6 +12,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         {children}
       </div>
       <BottomTabs />
+      <FloatingWhatsAppButton />
     </div>
   );
 };

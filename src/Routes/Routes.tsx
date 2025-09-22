@@ -47,6 +47,7 @@ import AboutUsPage from "@/pages/AboutUs/AboutUsPage";
 import ContactUsPage from "@/pages/ContactUs/ContactUsPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import AdminLeaderboard from "@/pages/admin/Leaderboard/AdminLeaderboard";
+import AdminWhatsAppSupportPage from "@/pages/admin/WhatsAppSupport/AdminWhatsAppSupportPage";
 
 const AppRoutes = () => {
   return (
@@ -398,6 +399,15 @@ const AppRoutes = () => {
             <AdminProvider>
               <AdminLeaderboard />
             </AdminProvider>
+          </AdminLayout>
+        }
+      />
+
+      <Route
+        path="/admin/whatsapp-support"
+        element={
+          <AdminLayout>
+            <AdminWhatsAppSupportPage />
           </AdminLayout>
         }
       />

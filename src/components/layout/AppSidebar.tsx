@@ -9,6 +9,7 @@ import {
   AlertTriangle,
   FileText,
   BarChart3,
+  MessageCircle,
 } from "lucide-react";
 import {
   Sidebar,
@@ -87,6 +88,11 @@ const items = [
     title: "Leaderboard",
     url: "/admin/leaderboard",
     icon: BarChart3,
+  },
+  {
+    title: "WhatsApp Support",
+    url: "/admin/whatsapp-support",
+    icon: MessageCircle,
   },
 ];
 
